@@ -19,10 +19,10 @@ describe('User creation', () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(201);
-      req.body.token.should.equal("eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw");
+      req.body.token.should.equal('eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw');
       done();
     });
   });
@@ -42,13 +42,13 @@ describe('User creation', () => {
           password: 'password1',
         })
         .end((err, res) => {
-          res.should.have.status(201);
+          res.should.have.status(409);
           res.should.be.json;
           res.body.should.be.a('object');
           res.body.status.should.equal(409);
-          res.body.message.should.equal("Email already exists");
-          res.body.email.should.equal("test@test.com");
-          res.body.password.should.equal("password");
+          res.body.message.should.equal('Email already exists');
+          res.body.email.should.equal('test@test.com');
+          res.body.password.should.equal('password');
           done()
         })
       }
@@ -61,14 +61,30 @@ describe('User creation', () => {
       password: 'password',
     })
     .end((err, res) => {
-      res.should.have.status(201);
+      res.should.have.status(2409);
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(400);
-      res.body.message.should.equal("You must enter an email");
-      res.body.password.should.equal("password");
+      res.body.message.should.equal('You must enter an email');
+      res.body.password.should.equal('password');
       done()
     })
+  })
+  it('should error if the email is malformed', done => {
+     chai.request(server)
+    .post('/auth/create')
+    .send({
+      email: 'test@test',
+      password: 'password',
+    })
+    .end((err, res) => {
+      res.should.have.status(400);
+      res.should.be.json;
+      res.body.should.be.a('object');
+      res.body.status.should.equal(400);
+      req.body.message.should.equal('Please enter in a valid email.');
+      done();
+    });
   })
   it('should error if the password field is not filled out', done => {
     chai.request(server)
@@ -77,17 +93,34 @@ describe('User creation', () => {
       email: 'test@test.com',
     })
     .end((err, res) => {
-      res.should.have.status(201);
+      res.should.have.status(400);
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(400);
-      res.body.message.should.equal("You must enter an email");
-      res.body.password.should.equal("password");
+      res.body.message.should.equal('You must enter a password');
+      res.body.email.should.equal('test@test.com');
       done()
     })
   })
+  it('should error if the password does not meet security criteria (>= 8 characters, one uppercase, one lowercase, one number, one special char)', done => {
+      chai.request(server)
+      .post('/auth/create')
+      .send({
+          email: 'test@test.com',
+          password: '2short'
+      })
+      .end((err, res) => {
+          res.should.have.status(400);
+          res.should.be.json;
+          res.body.should.be.a('object');
+          res.body.status.should.equal(400);
+          res.body.message.should.equal('Passwords must be at least 8 characters and contain at least one uppercase and lowecase letter, one number, and one special character.');
+          res.body.email.should.equal('test@test.com');
+          res.body.email.should.equal('2short')
+      })
+  })
 });
-describe("Logging in", () => {
+describe('Logging in', () => {
   it('should log in a user with correct username and password.', done => {
     chai.request(server)
     .post('/auth/login')
@@ -100,14 +133,14 @@ describe("Logging in", () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(200);
-      req.body.token.should.equal("eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw");
+      req.body.token.should.equal('eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw');
       done();
     });
   });
-  it("should error if the email is incorrect.", done => {
+  it('should error if the email is incorrect.', done => {
     chai.request(server)
     .post('/auth/login')
     .send({
@@ -119,11 +152,11 @@ describe("Logging in", () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(401);
-      req.body.message.should.equal("Wrong email or password.");
+      req.body.message.should.equal('Wrong email or password.');
       done();
     });
   });
-  it("should error if the password is incorrect.", done => {
+  it('should error if the password is incorrect.', done => {
     chai.request(server)
     .post('/auth/login')
     .send({
@@ -135,11 +168,11 @@ describe("Logging in", () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(401);
-      req.body.message.should.equal("Wrong email or password.");
+      req.body.message.should.equal('Wrong email or password.');
       done();
     });
   });
-  it("should error if the email is missing", done => {
+  it('should error if the email is missing', done => {
     chai.request(server)
     .post('/auth/login')
     .send({
@@ -150,11 +183,11 @@ describe("Logging in", () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(400);
-      req.body.message.should.equal("The email field cannot be blank.");
+      req.body.message.should.equal('The email field cannot be blank.');
       done();
     });
   });
-  it("should error if the email is malformed", done => {
+  it('should error if the email is malformed', done => {
     chai.request(server)
     .post('/auth/login')
     .send({
@@ -166,11 +199,11 @@ describe("Logging in", () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(400);
-      req.body.message.should.equal("Please enter in a valid email.");
+      req.body.message.should.equal('Please enter in a valid email.');
       done();
     });
   });
-  it("should error if the password is missing", done => {
+  it('should error if the password is missing', done => {
     chai.request(server)
     .post('/auth/login')
     .send({
@@ -181,7 +214,7 @@ describe("Logging in", () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(400);
-      req.body.message.should.equal("The password field cannot be blank.");
+      req.body.message.should.equal('The password field cannot be blank.');
       done();
     });
   });
@@ -191,17 +224,17 @@ describe('can deactivate users.', () => {
     chai.request(server)
     .post('/auth/deactivate')
     .send({
-      token: "eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw",
+      token: 'eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw',
     })
     .end((err, res) => {
       res.should.have.status(200);
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(200);
-      req.body.message.should.equal("Account deactivated");
+      req.body.message.should.equal('Account deactivated');
       done();
     });
   });
@@ -209,17 +242,17 @@ describe('can deactivate users.', () => {
     chai.request(server)
     .post('/auth/deactivate')
     .send({
-      token: "eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw.INVALID",
+      token: 'eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw.INVALID',
     })
     .end((err, res) => {
       res.should.have.status(401);
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(401);
-      req.body.message.should.equal("Invalid token.");
+      req.body.message.should.equal('Invalid token.');
       done();
     });
   });
@@ -231,7 +264,7 @@ describe('can deactivate users.', () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(400);
-      req.body.message.should.equal("Token not sent");
+      req.body.message.should.equal('Token not sent');
       done();
     });
   });
@@ -239,17 +272,17 @@ describe('can deactivate users.', () => {
     chai.request(server)
     .post('/auth/deactivate')
     .send({
-      token: "eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw",
+      token: 'eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw',
     })
     .end((err, res) => {
       res.should.have.status(403);
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(403);
-      req.body.message.should.equal("Already deactivated");
+      req.body.message.should.equal('Already deactivated');
       done();
     });
   });
@@ -259,17 +292,17 @@ describe('can activate users.', () => {
     chai.request(server)
     .post('/auth/activate')
     .send({
-      token: "eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw",
+      token: 'eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw',
     })
     .end((err, res) => {
       res.should.have.status(200);
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(200);
-      req.body.message.should.equal("Account activated");
+      req.body.message.should.equal('Account activated');
       done();
     });
   });
@@ -277,17 +310,17 @@ describe('can activate users.', () => {
     chai.request(server)
     .post('/auth/activate')
     .send({
-      token: "eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw.INVALID",
+      token: 'eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw.INVALID',
     })
     .end((err, res) => {
       res.should.have.status(401);
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(401);
-      req.body.message.should.equal("Invalid token.");
+      req.body.message.should.equal('Invalid token.');
       done();
     });
   });
@@ -299,7 +332,7 @@ describe('can activate users.', () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(400);
-      req.body.message.should.equal("Token not sent");
+      req.body.message.should.equal('Token not sent');
       done();
     });
   });
@@ -307,17 +340,17 @@ describe('can activate users.', () => {
     chai.request(server)
     .post('/auth/activate')
     .send({
-      token: "eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw",
+      token: 'eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw',
     })
     .end((err, res) => {
       res.should.have.status(403);
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(403);
-      req.body.message.should.equal("Already activated");
+      req.body.message.should.equal('Already activated');
       done();
     });
   });
@@ -327,10 +360,10 @@ describe('can change a user\'s password', () => {
     chai.request(server)
     .post('/auth/update')
     .send({
-      token: "eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw",
+      token: 'eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw',
       password: 'newpassword'
     })
     .end((err, res) => {
@@ -338,7 +371,7 @@ describe('can change a user\'s password', () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(200);
-      req.body.message.should.equal("Password updated.");
+      req.body.message.should.equal('Password updated.');
       chai.request(server)
       .post('/auth/login')
       .send({
@@ -355,10 +388,10 @@ describe('can change a user\'s password', () => {
     chai.request(server)
     .post('/auth/update')
     .send({
-      token: "eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw.INVALID",
+      token: 'eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw.INVALID',
       password: 'newpassword1'
     })
     .end((err, res) => {
@@ -366,7 +399,7 @@ describe('can change a user\'s password', () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(401);
-      req.body.message.should.equal("Invalid token.");
+      req.body.message.should.equal('Invalid token.');
       chai.request(server)
       .post('/auth/login')
       .send({
@@ -390,7 +423,7 @@ describe('can change a user\'s password', () => {
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(400);
-      req.body.message.should.equal("Missing token.");
+      req.body.message.should.equal('Missing token.');
       chai.request(server)
       .post('/auth/login')
       .send({
@@ -407,17 +440,17 @@ describe('can change a user\'s password', () => {
     chai.request(server)
     .post('/auth/update')
     .send({
-      token: "eyJhbGciOiJIUzUxMiJ9." +
-        "eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_" +
-        "C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ" +
-        "4AWC93QDMChuCmUM4YtDjzAw",
+      token: 'eyJhbGciOiJIUzUxMiJ9.' +
+        'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
+        'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
+        '4AWC93QDMChuCmUM4YtDjzAw',
     })
     .end((err, res) => {
       res.should.have.status(400);
       res.should.be.json;
       res.body.should.be.a('object');
       res.body.status.should.equal(400);
-      req.body.message.should.equal("Password field cannot be blank.");
+      req.body.message.should.equal('Password field cannot be blank.');
       done();
     });
   });
