@@ -26,13 +26,13 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// production error handler
+//  error handler
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.json({
     "requested resource": req.url,
     "requested method": req.method,
-    "error": err.message,
+    "message": err.message,
     "status": err.status,
   });
 });
