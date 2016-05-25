@@ -456,66 +456,107 @@ describe('can change a user\'s password', () => {
     });
 });
 describe('can create a user\'s detailed profile', () => {
-   it('should create a profile with all information', done => {
-       
-   })
-   it('should create a profile with just an email and displayName', done => {
-       
-   })
-   it('should return an error if email is missing', done => {
-       
-   })
-   it('should return an error if email is malformed', done => {
-       
-   })
-   it('should return an error if displayName is missing', done => {
-       
-   })
-   it('should return an error if displayName isn\'t a string', done => {
-       
-   })
-   it('should return an error if displayName is greater than 50 characters', done => {
-       
-   })
-   it('should return an error if the user already exists', done => {
-       
-   })
-   it('should return an error if the lastName exists and isn\t a string', done => {
-       
-   })
-   it('should return an error if the lastName exists and is longer than 30 characters', done => {
-       
-   })
-   it('should return an error if the description exists and isn\'t a string', done => {
-       
-   })
-   it('should return an error if the description exists and is longer than 500 characters', done => {
-       
-   })
-   it('should return an error if state exists and is not a string', done => {
-       
-   })
-   it('should return an error if state exists and is longer than two characters', done => {
-       
-   })
-   it('should return an error if the avatar file is not a png or jpg', done => {
-       
-   })
-   it('should return an error if the avatar file is greater than 1MB', done => {
-       
-   })
+    it('should create a profile with all information', done => {
+
+    })
+    it('should create a profile with just an email and displayName', done => {
+
+    })
+    it('should return an error if email is missing', done => {
+
+    })
+    it('should return an error if email is malformed', done => {
+
+    })
+    it('should return an error if displayName is missing', done => {
+
+    })
+    it('should return an error if displayName isn\'t a string', done => {
+
+    })
+    it('should return an error if displayName is greater than 50 characters', done => {
+
+    })
+    it('should return an error if the user already exists', done => {
+
+    })
+    it('should return an error if the lastName exists and isn\t a string', done => {
+
+    })
+    it('should return an error if the lastName exists and is longer than 30 characters', done => {
+
+    })
+    it('should return an error if the description exists and isn\'t a string', done => {
+
+    })
+    it('should return an error if the description exists and is longer than 500 characters', done => {
+
+    })
+    it('should return an error if state exists and is not a string', done => {
+
+    })
+    it('should return an error if state exists and is longer than two characters', done => {
+
+    })
+    it('should return an error if the avatar file exists and is not a png or jpg', done => {
+
+    })
+    it('should return an error if the avatar file exists and is greater than 1MB', done => {
+
+    })
 });
 describe('get user profile', () => {
-   it('should get user profile information with valid email', done => {
-       
-   })
-   it('should return error with invalid email', done => {
-       
-   })
-   it('should return error with malformed email', done => {
-       
-   })
+    it('should get user profile information with valid email', done => {
+
+    })
+    it('should return error with invalid email', done => {
+
+    })
+    it('should return error with malformed email', done => {
+
+    })
 });
 describe('updating user profile information', () => {
-    
+    it('should update profile information when valid updates are passed', done => {
+
+    })
+    it('should return an error if the user already exists', done => {
+
+    })
+    it('should return an error if the email is malformed', done => {
+
+    })
+    it('should return an error with a missing email', done => {
+
+    })
+    it('should return an error if displayName is not a string', done => {
+
+    })
+    it('should return an error if displayName is greater than 50 characters', done => {
+
+    })
+    it('should return an error if the lastName is not a string', done => {
+
+    })
+    it('should return an error if the lastName is longer than 30 characters', done => {
+
+    })
+    it('should return an error if the description is not a string', done => {
+
+    })
+    it('should return an error if the description is longer than 500 characters', done => {
+
+    })
+    it('should return an error if state is not a string', done => {
+
+    })
+    it('should return an error if state is longer than two characters', done => {
+
+    })
+    it('should return an error if the avatar file is not a png or jpg', done => {
+
+    })
+    it('should return an error if the avatar file is greater than 1MB', done => {
+
+    })
 });
