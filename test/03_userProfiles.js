@@ -759,7 +759,7 @@ describe('following another user/adding staff', () => {
                                                     res.should.be.json;
                                                     res.body.should.be.a('object');
                                                     res.body.status.should.equal(409);
-                                                    res.body.message.should.equal('Already following this user');
+                                                    res.body.message.should.equal('Already following another@email.com');
                                                     done();
                                                 })
                                         }
@@ -917,7 +917,7 @@ describe('unfollowing another user/removing staff', () => {
                             res.should.be.json;
                             res.body.should.be.a('object');
                             res.body.status.should.equal(409);
-                            res.body.message.should.equal('User to unfollow is not in this profile\'s array');
+                            res.body.message.should.equal('Cannot remove another@email.com, not following them');
                             done();
                         })
                 }
