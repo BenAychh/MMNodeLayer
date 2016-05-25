@@ -506,5 +506,16 @@ describe('can create a user\'s detailed profile', () => {
    })
 });
 describe('get user profile', () => {
-   it('') 
+   it('should get user profile information with valid email', done => {
+       
+   })
+   it('should return error with invalid email', done => {
+       
+   })
+   it('should return error with malformed email', done => {
+       
+   })
+});
+describe('updating user profile information', () => {
+    
 });
