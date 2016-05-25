@@ -61,7 +61,7 @@ describe('User creation', () => {
                 password: '1Password!',
             })
             .end((err, res) => {
-                res.should.have.status(2409);
+                res.should.have.status(400);
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
