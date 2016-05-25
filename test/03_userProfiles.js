@@ -443,7 +443,7 @@ describe('updating user profile information', () => {
     })
     it('should return an error if displayName is greater than 50 characters', done => {
         chai.request(server)
-            .post('/profiles/create')
+            .post('/profiles/update')
             .send({
                 email: 'testy@test.com',
                 displayName: 'Ab illo tempore, ab est sed immemorabili. Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Qui ipsorum lingua Celtae, nostra Galli appellantur.',
@@ -463,7 +463,7 @@ describe('updating user profile information', () => {
     })
     it('should return an error if the lastName is not a string', done => {
         chai.request(server)
-            .post('/profiles/create')
+            .post('/profiles/update')
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
@@ -483,7 +483,7 @@ describe('updating user profile information', () => {
     })
     it('should return an error if the lastName is longer than 30 characters', done => {
         chai.request(server)
-            .post('/profiles/create')
+            .post('/profiles/update')
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
@@ -503,7 +503,7 @@ describe('updating user profile information', () => {
     })
     it('should return an error if the description is not a string', done => {
         chai.request(server)
-            .post('/profiles/create')
+            .post('/profiles/update')
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
@@ -523,7 +523,7 @@ describe('updating user profile information', () => {
     })
     it('should return an error if the description is longer than 500 characters', done => {
         chai.request(server)
-            .post('/profiles/create')
+            .post('/profiles/update')
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
