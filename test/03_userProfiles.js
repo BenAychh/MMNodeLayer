@@ -137,10 +137,10 @@ describe('can create a user\'s detailed profile', () => {
                             displayName: 'Testy',
                         })
                         .end((err, res) => {
-                            res.should.have.status(409);
+                            res.should.have.status(400);
                             res.should.be.json;
                             res.body.should.be.a('object');
-                            res.body.status.should.equal(409);
+                            res.body.status.should.equal(400);
                             res.body.message.should.equal('Profile already exists');
                             res.body.email.should.equal('testy@test.com');
                             res.body.displayName.should.equal('Testy');
@@ -308,11 +308,11 @@ describe('get user profile', () => {
                 email: 'testy@test.com',
             })
             .end((err, res) => {
-                res.should.have.status(409);
+                res.should.have.status(400);
                 res.should.be.json;
                 res.body.should.be.a('object');
-                res.body.status.should.equal(409);
-                res.body.message.should.equal('User does not exist in database');
+                res.body.status.should.equal(400);
+                res.body.message.should.equal('Profile does not exist in database');
                 done();
             })
     })
@@ -361,7 +361,7 @@ describe('updating user profile information', () => {
                             res.should.be.json;
                             res.body.should.be.a('object');
                             res.body.status.should.equal(200);
-                            res.body.message.should.equal('Update was successful');
+                            res.body.message.should.equal('Profile updated');
                             done();
                         })
                 }
@@ -374,10 +374,10 @@ describe('updating user profile information', () => {
                 email: 'testy@test.com'
             })
             .end((err, res) => {
-                res.should.have.status(409);
+                res.should.have.status(400);
                 res.should.be.json;
                 res.body.should.be.a('object');
-                res.body.status.should.equal(409);
+                res.body.status.should.equal(400);
                 res.body.message.should.equal('Profile does not exist in database');
                 done();
             })
@@ -517,7 +517,7 @@ describe('updating user profile information', () => {
                 res.should.be.json;
                 res.should.be.a('object');
                 res.body.status.should.equal(400);
-                res.body.message.should.equal('Please provide a description that is text and less than 500 characters.');
+                res.body.message.should.equal('Please provide a description that is text and less than 500 characters');
                 done();
             })
     })
@@ -537,7 +537,7 @@ describe('updating user profile information', () => {
                 res.should.be.json;
                 res.should.be.a('object');
                 res.body.status.should.equal(400);
-                res.body.message.should.equal('Please provide a description that is text and less than 500 characters.');
+                res.body.message.should.equal('Please provide a description that is text and less than 500 characters');
                 done();
             })
     })
@@ -611,7 +611,7 @@ describe('following another user/adding staff', () => {
                                         res.should.be.json;
                                         res.body.should.be.a('object');
                                         res.body.status.should.equal(200);
-                                        res.body.message.should.equal('another@email.com');
+                                        res.body.message.should.equal('another@email.com followed');
                                         done();
                                     })
                             }
@@ -681,22 +681,6 @@ describe('following another user/adding staff', () => {
                 done();
             })
     })
-    it('should return an error if user email is not in profile database', done => {
-        chai.request(server)
-            .post('/profiles/follow')
-            .send({
-                email: 'testy@test',
-                follow: 'another@email.com'
-            })
-            .end((err, res) => {
-                res.should.have.status(409);
-                res.should.be.json;
-                res.should.be.a('object');
-                res.body.status.should.equal(409);
-                res.body.message.should.equal('Profile is not in the database');
-                done();
-            })
-    })
     it('should return an error if email to follow is not in profile database', done => {
         chai.request(server)
             .post('/profiles/create')
@@ -713,11 +697,11 @@ describe('following another user/adding staff', () => {
                             follow: 'another@email.com'
                         })
                         .end((err, res) => {
-                            res.should.have.status(409);
+                            res.should.have.status(400);
                             res.should.be.json;
                             res.body.should.be.a('object');
-                            res.body.status.should.equal(409);
-                            res.body.message.should.equal('User to follow is not in the database');
+                            res.body.status.should.equal(400);
+                            res.body.message.should.equal('another@email.com is not a valid user');
                             done();
                         })
                 }
@@ -755,10 +739,10 @@ describe('following another user/adding staff', () => {
                                                     follow: 'another@email.com'
                                                 })
                                                 .end((err, res) => {
-                                                    res.should.have.status(409);
+                                                    res.should.have.status(400);
                                                     res.should.be.json;
                                                     res.body.should.be.a('object');
-                                                    res.body.status.should.equal(409);
+                                                    res.body.status.should.equal(400);
                                                     res.body.message.should.equal('Already following another@email.com');
                                                     done();
                                                 })
@@ -808,7 +792,7 @@ describe('unfollowing another user/removing staff', () => {
                                                     res.should.be.json;
                                                     res.body.should.be.a('object');
                                                     res.body.status.should.equal(200);
-                                                    res.body.message.should.equal('Unfollowed another@email.com');
+                                                    res.body.message.should.equal('another@email.com unfollowed');
                                                     done();
                                                 })
                                         }
@@ -881,22 +865,6 @@ describe('unfollowing another user/removing staff', () => {
                 done();
             })
     })
-    it('should return an error if user email is not in profile database', done => {
-        chai.request(server)
-            .post('/profiles/unfollow')
-            .send({
-                email: 'testy@test.com',
-                follow: 'another@email.com'
-            })
-            .end((err, res) => {
-                res.should.have.status(409);
-                res.should.be.json;
-                res.should.be.a('object');
-                res.body.status.should.equal(409);
-                res.body.message.should.equal('Profile is not in the database');
-                done();
-            })
-    })
     it('should return an error if email to follow is not in the user profile "follow" array', done => {
         chai.request(server)
             .post('/profiles/create')
@@ -913,11 +881,11 @@ describe('unfollowing another user/removing staff', () => {
                             follow: 'another@email.com'
                         })
                         .end((err, res) => {
-                            res.should.have.status(409);
+                            res.should.have.status(400);
                             res.should.be.json;
                             res.body.should.be.a('object');
-                            res.body.status.should.equal(409);
-                            res.body.message.should.equal('Cannot remove another@email.com, not following them');
+                            res.body.status.should.equal(400);
+                            res.body.message.should.equal('another@email.com is not followed');
                             done();
                         })
                 }
