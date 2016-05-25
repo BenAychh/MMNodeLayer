@@ -42,11 +42,11 @@ describe('User creation', () => {
                             password: '1Password!',
                         })
                         .end((err, res) => {
-                            res.should.have.status(409);
+                            res.should.have.status(400);
                             res.should.be.json;
                             res.body.should.be.a('object');
-                            res.body.status.should.equal(409);
-                            res.body.message.should.equal('Email already exists');
+                            res.body.status.should.equal(400);
+                            res.body.message.should.equal('User already exists');
                             res.body.email.should.equal('test@test.com');
                             res.body.password.should.equal('password');
                             done();
@@ -148,10 +148,10 @@ describe('Logging in', () => {
                 password: '1Password!',
             })
             .end((err, res) => {
-                res.should.have.status(401);
+                res.should.have.status(403);
                 res.should.be.json;
                 res.body.should.be.a('object');
-                res.body.status.should.equal(401);
+                res.body.status.should.equal(403);
                 req.body.message.should.equal('Wrong email or password.');
                 done();
             });
@@ -164,10 +164,10 @@ describe('Logging in', () => {
                 password: 'Password1!',
             })
             .end((err, res) => {
-                res.should.have.status(401);
+                res.should.have.status(403);
                 res.should.be.json;
                 res.body.should.be.a('object');
-                res.body.status.should.equal(401);
+                res.body.status.should.equal(403);
                 req.body.message.should.equal('Wrong email or password.');
                 done();
             });
@@ -346,10 +346,10 @@ describe('can activate users.', () => {
                     '4AWC93QDMChuCmUM4YtDjzAw',
             })
             .end((err, res) => {
-                res.should.have.status(403);
+                res.should.have.status(400);
                 res.should.be.json;
                 res.body.should.be.a('object');
-                res.body.status.should.equal(403);
+                res.body.status.should.equal(400);
                 req.body.message.should.equal('Already activated');
                 done();
             });
@@ -371,7 +371,7 @@ describe('can change a user\'s password', () => {
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.status.should.equal(200);
-                req.body.message.should.equal('Password updated.');
+                req.body.message.should.equal('User password updated.');
                 chai.request(server)
                     .post('/auth/login')
                     .send({
@@ -395,10 +395,10 @@ describe('can change a user\'s password', () => {
                 password: 'Newpassword1!'
             })
             .end((err, res) => {
-                res.should.have.status(401);
+                res.should.have.status(403);
                 res.should.be.json;
                 res.body.should.be.a('object');
-                res.body.status.should.equal(401);
+                res.body.status.should.equal(403);
                 req.body.message.should.equal('Invalid token.');
                 chai.request(server)
                     .post('/auth/login')
