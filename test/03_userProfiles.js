@@ -669,7 +669,7 @@ describe('following another user/adding staff', () => {
         chai.request(server)
             .post('/profiles/follow')
             .send({
-                email: 'testy@test',
+                email: 'testy@test.com',
                 follow: 'another@email'
             })
             .end((err, res) => {
@@ -753,17 +753,17 @@ describe('following another user/adding staff', () => {
                                                 .send({
                                                     email: 'testy@test.com',
                                                     follow: 'another@email.com'
-                                             })
-                                             .end((err, res) => {
-                                                 res.should.have.status(409);
-                                                 res.should.be.json;
-                                                 res.body.should.be.a('object');
-                                                 res.body.status.should.equal(409);
-                                                 res.body.message.should.equal('Already following this user');
-                                                 done();
-                                             })
+                                                })
+                                                .end((err, res) => {
+                                                    res.should.have.status(409);
+                                                    res.should.be.json;
+                                                    res.body.should.be.a('object');
+                                                    res.body.status.should.equal(409);
+                                                    res.body.message.should.equal('Already following this user');
+                                                    done();
+                                                })
                                         }
-                                        
+
                                     })
                             }
                         })
@@ -772,25 +772,155 @@ describe('following another user/adding staff', () => {
     })
 });
 describe('unfollowing another user/removing staff', () => {
-    it('should add another user to the profile follow list given correct criteria', done => {
+    it('should remove a user from the profile follow list given correct criteria', done => {
+        chai.request(server)
+            .post('/profiles/create')
+            .send({
+                email: 'testy@test.com',
+                displayName: 'Testy'
+            })
+            .end((err, res) => {
+                if (!err) {
+                    chai.request(server)
+                        .post('/profiles/create')
+                        .send({
+                            email: 'another@email.com',
+                            displayName: 'Another'
+                        })
+                        .end((err, res) => {
+                            if (!err) {
+                                chai.request(server)
+                                    .post('/profiles/follow')
+                                    .send({
+                                        email: 'testy@test.com',
+                                        follow: 'another@email.com'
+                                    })
+                                    .end((err, res) => {
+                                        if (!err) {
+                                            chai.request(server)
+                                                .post('/profiles/unfollow')
+                                                .send({
+                                                    email: 'testy@test.com',
+                                                    follow: 'another@email.com'
+                                                })
+                                                .end((err, res) => {
+                                                    res.should.have.status(200);
+                                                    res.should.be.json;
+                                                    res.body.should.be.a('object');
+                                                    res.body.status.should.equal(200);
+                                                    res.body.message.should.equal('Unfollowed another@email.com');
+                                                    done();
+                                                })
+                                        }
 
+                                    })
+                            }
+                        })
+                }
+            });
     })
     it('should should return an error if email key is missing', done => {
-
+        chai.request(server)
+            .post('/profiles/unfollow')
+            .send({
+                unfollow: 'another@email.com'
+            })
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.should.be.json;
+                res.should.be.a('object');
+                res.body.status.should.equal(400);
+                res.body.message.should.equal('Missing email or unfollow key');
+                done();
+            })
     })
     it('should return an error if the email value is not an email', done => {
-
+        chai.request(server)
+            .post('/profiles/unfollow')
+            .send({
+                email: 'testy@test',
+                unfollow: 'another@email.com'
+            })
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.should.be.json;
+                res.should.be.a('object');
+                res.body.status.should.equal(400);
+                res.body.message.should.equal('Both email and unfollow values must be a valid email');
+                done();
+            })
     })
     it('should return an error if unfollow key is missing', done => {
-
+        chai.request(server)
+            .post('/profiles/unfollow')
+            .send({
+                email: 'testy@test.com'
+            })
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.should.be.json;
+                res.should.be.a('object');
+                res.body.status.should.equal(400);
+                res.body.message.should.equal('Missing email or unfollow key');
+                done();
+            })
     })
     it('should return an error if the unfollow value is not an email', done => {
-
+        chai.request(server)
+            .post('/profiles/unfollow')
+            .send({
+                email: 'testy@test.com',
+                unfollow: 'another@email'
+            })
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.should.be.json;
+                res.should.be.a('object');
+                res.body.status.should.equal(400);
+                res.body.message.should.equal('Both email and unfollow values must be a valid email');
+                done();
+            })
     })
     it('should return an error if user email is not in profile database', done => {
-
+        chai.request(server)
+            .post('/profiles/unfollow')
+            .send({
+                email: 'testy@test.com',
+                follow: 'another@email.com'
+            })
+            .end((err, res) => {
+                res.should.have.status(409);
+                res.should.be.json;
+                res.should.be.a('object');
+                res.body.status.should.equal(409);
+                res.body.message.should.equal('Profile is not in the database');
+                done();
+            })
     })
     it('should return an error if email to follow is not in the user profile "follow" array', done => {
-
+        chai.request(server)
+            .post('/profiles/create')
+            .send({
+                email: 'testy@test.com',
+                displayName: 'Testy'
+            })
+            .end((err, res) => {
+                if (!err) {
+                    chai.request(server)
+                        .post('/profiles/unfollow')
+                        .send({
+                            email: 'testy@test.com',
+                            follow: 'another@email.com'
+                        })
+                        .end((err, res) => {
+                            res.should.have.status(409);
+                            res.should.be.json;
+                            res.body.should.be.a('object');
+                            res.body.status.should.equal(409);
+                            res.body.message.should.equal('User to unfollow is not in this profile\'s array');
+                            done();
+                        })
+                }
+            })
     })
 });
