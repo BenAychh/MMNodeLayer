@@ -23,7 +23,7 @@ describe('Bad requests correctly 404', done => {
   });
   it('404s on improper POST request', done => {
     chai.request(server)
-    .POST('/something/that/does/not/exist')
+    .post('/something/that/does/not/exist')
     .end((err, res) => {
       res.should.have.status(404);
       res.should.be.json;
