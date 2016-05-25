@@ -560,3 +560,26 @@ describe('updating user profile information', () => {
 
     })
 });
+describe('following another user/adding staff', () => {
+    it('should add another user to the profile follow list given correct criteria', done => {
+        
+    })
+    it('should should return an error if email key is missing', done => {
+        
+    })
+    it('should return an error if follow key is missing', done => {
+        
+    })
+    it('should return an error if user email is not in profile database', done => {
+        
+    })
+    it('should return an error if email to follow is not in profile database', done => {
+        
+    })
+    it('should return an error if the email to follow is already in the user profile', done => {
+        
+    })
+});
+describe('unfollowing another user/removing staff', () => {
+    
+})
