@@ -49,7 +49,7 @@ describe('User creation', () => {
                             res.body.message.should.equal('Email already exists');
                             res.body.email.should.equal('test@test.com');
                             res.body.password.should.equal('password');
-                            done()
+                            done();
                         })
                 }
             });
