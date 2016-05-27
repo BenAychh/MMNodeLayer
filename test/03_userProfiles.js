@@ -6,6 +6,12 @@ var should = chai.should();
 
 chai.use(chaiHttp);
 
+beforeEach(function(done) {
+    chai.request(server)
+        .post('/auth/signup')
+        .send({})
+});
+
 describe('can create a user\'s detailed profile', () => {
     it('should create a profile with all information', done => {
         chai.request(server)
