@@ -100,7 +100,7 @@ describe('Logging in', () => {
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
-                req.body.message.should.equal('The email field cannot be blank.');
+                req.body.message.should.equal('Please enter an email.');
                 done();
             });
     });
@@ -117,7 +117,7 @@ describe('Logging in', () => {
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
-                req.body.message.should.equal('Please enter in a valid email.');
+                req.body.message.should.equal('Please enter a valid email.');
                 done();
             });
     });
@@ -133,7 +133,7 @@ describe('Logging in', () => {
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
-                req.body.message.should.equal('The password field cannot be blank.');
+                req.body.message.should.equal('Please enter a password.');
                 done();
             });
     });
