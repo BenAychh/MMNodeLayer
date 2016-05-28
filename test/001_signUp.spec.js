@@ -1,14 +1,12 @@
 'use strict'
 
-const returnedTeacherToken = 'eyJhbGciOiJIUzUxMiJ9.' +
-    'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
-    'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
-    '4AWC93QDMChuCmUM4YtDjzAw';
+const returnedTeacherToken = 'eyJhbGciOiJIUzUxMiJ9.eyJpc1RlYWNoZXIiOnRy' +
+    'dWUsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSJ9.POqUvMScZPvEoYCPtMSUURUkPwswm' +
+    'cO75C6FAy9QkZHw9eYAU19ROzv_tjlggDjDA9YeVAgpKGjNpCMqkU1UHA';
 
-const returnedSchoolToken = 'eyJhbGciOiJIUzUxMiJ9.' +
-    'eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIn0.egbaJ7yWUvC4mU_' +
-    'C7LNJi24cPNpfx3rlr7woWn9pqsGX6LrGCK2Rf2LaD2cFiJ' +
-    '4AWC93QDMChuCmUM4YtDjzAw';
+const returnedSchoolToken = 'eyJhbGciOiJIUzUxMiJ9.eyJpc1RlYWNoZXIiOmZhb' +
+    'HNlLCJlbWFpbCI6InRlc3RAdGVzdC5jb20ifQ.ILYZYC_GhG7T2eoMO0hPFh8R-dBY' +
+    'QyhT6J4wWPD1fW5QHnp6vdFeo8IPRVmWUR-iPmE-Tqa4FlpeNV1fQNylSw';
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -20,19 +18,32 @@ const pg = require('pg');
 
 chai.use(chaiHttp);
 
-var authhost = process.env.AUTHPG_PORT_5432_TCP_ADDR || localhost;
+var authhost = process.env.AUTHPG_PORT_5432_TCP_ADDR || 'localhost';
 var authport = process.env.AUTHPG_PORT_5432_TCP_PORT || 5432;
-var
-beforeEach(done => {
-  let constring = "postgres://" + authhost + "/" + authport;
-  pg.connect(conString, function(err, client, pgDone) {
+var profilehost = process.env.PROFILEPG_PORT_5432_TCP_ADDR || 'localhost';
+var profileport = process.env.PROFILEPG_PORT_5432_TCP_PORT || 5432;
+beforeEach(function(done) {
+  let authConString = "postgres://" + authhost + ":" + authport + "/Users";
+  let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
+  pg.connect(authConString, (err, client, pgDone1) => {
     if(err) {
       return console.error('error fetching client from pool', err);
     }
-    client.query('delete from users', function(err, result) {
-      pgDone();
-      done();
+    client.query('delete from users', (err, result) => {
+      pgDone1();
+      pg.connect(profileConString, (err, client, pgDone2) => {
+        if(err) {
+          return console.error('error fetching client from pool', err);
+        }
+        client.query('delete from profiles', (err, result) => {
+          pgDone2();
+          done();
 
+          if(err) {
+            return console.error('error running query', err);
+          }
+        });
+      });
       if(err) {
         return console.error('error running query', err);
       }
@@ -46,7 +57,7 @@ describe('a user submits the sign up form', () => {
             .post('/auth/signup')
             .send({
                 email: 'test@test.com',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 displayName: 'Testy',
                 lastName: 'Mctestface',
@@ -55,11 +66,12 @@ describe('a user submits the sign up form', () => {
                 avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
             })
             .end((err, res) => {
-                res.status.should.equal(200);
+                res.status.should.equal(201);
                 res.should.be.json;
-                res.body.status.should.equal(200);
+                res.body.status.should.equal(201);
                 res.body.message.should.equal('Account created for test@test.com');
                 res.body.token.should.equal(returnedTeacherToken);
+                done();
             });
     });
 
@@ -68,7 +80,7 @@ describe('a user submits the sign up form', () => {
             .post('/auth/signup')
             .send({
                 email: 'test@test.com',
-                isTeacher: 0,
+                isTeacher: false,
                 password: '1Password!',
                 displayName: 'Testy',
                 description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
@@ -76,11 +88,12 @@ describe('a user submits the sign up form', () => {
                 avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
             })
             .end((err, res) => {
-                res.status.should.equal(200);
+                res.status.should.equal(201);
                 res.should.be.json;
-                res.body.status.should.equal(200);
+                res.body.status.should.equal(201);
                 res.body.message.should.equal('Account created for test@test.com');
                 res.body.token.should.equal(returnedSchoolToken);
+                done();
             });
     });
 
@@ -89,7 +102,7 @@ describe('a user submits the sign up form', () => {
             .post('/auth/signup')
             .send({
                 email: 'test@test.com',
-                isTeacher: 0,
+                isTeacher: false,
                 password: '1Password!',
                 displayName: 'Testy',
                 lastName: 'McTesterson',
@@ -102,7 +115,7 @@ describe('a user submits the sign up form', () => {
                 res.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Schools may not have a last name');
-                res.body.token.should.equal(returnedSchoolToken);
+                done();
             });
     });
 
@@ -111,16 +124,17 @@ describe('a user submits the sign up form', () => {
             .post('/auth/signup')
             .send({
                 email: 'test@test.com',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 displayName: 'Testy'
             })
             .end((err, res) => {
-                res.status.should.equal(200);
+                res.status.should.equal(201);
                 res.should.be.json;
-                res.body.status.should.equal(200);
+                res.body.status.should.equal(201);
                 res.body.message.should.equal('Account created for test@test.com');
                 res.body.token.should.equal(returnedTeacherToken);
+                done();
             });
     });
 
@@ -129,16 +143,17 @@ describe('a user submits the sign up form', () => {
             .post('/auth/signup')
             .send({
                 email: 'test@test.com',
-                isTeacher: 0,
+                isTeacher: false,
                 password: '1Password!',
                 displayName: 'Testy'
             })
             .end((err, res) => {
-                res.status.should.equal(200);
+                res.status.should.equal(201);
                 res.should.be.json;
-                res.body.status.should.equal(200);
+                res.body.status.should.equal(201);
                 res.body.message.should.equal('Account created for test@test.com');
                 res.body.token.should.equal(returnedSchoolToken);
+                done();
             });
     });
 
@@ -147,7 +162,7 @@ describe('a user submits the sign up form', () => {
             .post('/auth/signup')
             .send({
                 email: 'test@test.com',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 displayName: 'Testy'
             })
@@ -157,7 +172,7 @@ describe('a user submits the sign up form', () => {
                         .post('/auth/signup')
                         .send({
                             email: 'test@test.com',
-                            isTeacher: 1,
+                            isTeacher: true,
                             password: '1Password!',
                             displayName: 'Testy'
                         })
@@ -167,8 +182,10 @@ describe('a user submits the sign up form', () => {
                             res.body.should.be.a('object');
                             res.body.status.should.equal(400);
                             res.body.message.should.equal('User already exists');
-                            res.body.email.should.equal('test@test.com');
-                            res.body.password.should.equal('password');
+                            res.body.form.email.should.equal('test@test.com')
+                            res.body.form.isTeacher.should.equal(true);
+                            res.body.form.password.should.equal('1Password!');
+                            res.body.form.displayName.should.equal('Testy');
                             done();
                         })
                 }
@@ -179,7 +196,7 @@ describe('a user submits the sign up form', () => {
         chai.request(server)
             .post('/auth/signup')
             .send({
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 displayName: 'Testy'
             })
@@ -189,7 +206,9 @@ describe('a user submits the sign up form', () => {
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please enter enter an email');
-                res.body.password.should.equal('1Password!');
+                res.body.form.password.should.equal('1Password!');
+                res.body.form.displayName.should.equal('Testy');
+                res.body.form.isTeacher.should.equal(true);
                 done();
             })
     });
@@ -199,7 +218,7 @@ describe('a user submits the sign up form', () => {
             .post('/auth/signup')
             .send({
                 email: 'test@test',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 displayName: 'Testy'
             })
@@ -208,7 +227,11 @@ describe('a user submits the sign up form', () => {
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
-                req.body.message.should.equal('Please enter a valid email.');
+                res.body.message.should.equal('Please enter a valid email');
+                res.body.form.email.should.equal('test@test');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
+                res.body.form.displayName.should.equal('Testy');
                 done();
             });
     });
@@ -217,8 +240,8 @@ describe('a user submits the sign up form', () => {
         chai.request(server)
             .post('/auth/signup')
             .send({
-                email: 'test@test',
-                isTeacher: 1,
+                email: 'test@test.com',
+                isTeacher: true,
                 displayName: 'Testy'
             })
             .end((err, res) => {
@@ -227,7 +250,9 @@ describe('a user submits the sign up form', () => {
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please enter a password');
-                res.body.email.should.equal('test@test.com');
+                res.body.form.email.should.equal('test@test.com');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.displayName.should.equal('Testy');
                 done()
             })
     });
@@ -236,7 +261,7 @@ describe('a user submits the sign up form', () => {
         chai.request(server)
             .post('/auth/signup')
             .send({
-                email: 'test@test',
+                email: 'test@test.com',
                 password: '1Password!',
                 displayName: 'Testy'
             })
@@ -245,8 +270,10 @@ describe('a user submits the sign up form', () => {
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
-                res.body.message.should.equal('Please enter a password');
-                res.body.email.should.equal('test@test.com');
+                res.body.message.should.equal('Please select teacher or school');
+                res.body.form.email.should.equal('test@test.com');
+                res.body.form.password.should.equal('1Password!');
+                res.body.form.displayName.should.equal('Testy');
                 done()
             })
     })
@@ -257,7 +284,7 @@ describe('a user submits the sign up form', () => {
             .send({
                 email: 'test@test.com',
                 password: '2short',
-                isTeacher: 1,
+                isTeacher: true,
                 displayName: 'Testy'
             })
             .end((err, res) => {
@@ -266,8 +293,11 @@ describe('a user submits the sign up form', () => {
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Passwords must be at least 8 characters and contain at least one uppercase and lowecase letter, one number, and one special character.');
-                res.body.email.should.equal('test@test.com');
-                res.body.email.should.equal('2short')
+                res.body.form.email.should.equal('test@test.com');
+                res.body.form.password.should.equal('2short')
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.displayName.should.equal('Testy');
+                done();
             })
     });
 
@@ -276,7 +306,7 @@ describe('a user submits the sign up form', () => {
             .post('/auth/signup')
             .send({
                 email: 'testy@test.com',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!'
             })
             .end((err, res) => {
@@ -284,7 +314,10 @@ describe('a user submits the sign up form', () => {
                 res.should.be.json;
                 res.should.be.a('object');
                 res.body.status.should.equal(400);
-                res.body.message.should.equal('Missing email or display name for creation');
+                res.body.message.should.equal('Please enter a display/first name');
+                res.body.form.email.should.equal('testy@test.com');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
                 done();
             })
     });
@@ -321,7 +354,7 @@ describe('a user submits the sign up form', () => {
                 res.should.be.json;
                 res.should.be.a('object');
                 res.body.status.should.equal(400);
-                res.body.message.should.equal('Please provide a display name that is text less than 50 characters');
+                res.body.message.should.equal('Please provide a display name that is text 50 characters or less');
                 done();
             })
     });
