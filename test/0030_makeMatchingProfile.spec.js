@@ -24,7 +24,7 @@ describe('submitting a matching profile', () => {
                 state: 'CO',
                 avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
             })
-            .then((err, res) => {
+            .end((err, res) => {
                 teacherToken = res.body.token;
                 chai.request(server)
                     .post('/auth/signup')
