@@ -1,3 +1,5 @@
+'use strict'
+
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app');
@@ -96,7 +98,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(403);
+                res.status.should.equal(403);
                 res.body.should.be.json;
                 res.body.status.should.equal(403);
                 res.body.message.should.equal('Please log in');
@@ -130,7 +132,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -160,7 +162,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -189,7 +191,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -219,7 +221,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -248,7 +250,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -278,7 +280,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -308,7 +310,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -337,7 +339,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -367,7 +369,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -396,7 +398,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -426,7 +428,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -456,7 +458,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -485,41 +487,41 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
             });
     });
 
-    it('should return an error if orgTypesWgt is not 1, 10, 50 or 100', {
+    it('should return an error if orgTypesWgt is not 1, 10, 50 or 100', done => {
         chai.request(server)
-        .post('/profile/makematchprofile')
-        .send({
-            token: teacherToken,
-            training: [1],
-            trainingWgt: 1,
-            locTypes: [1, 2, 3],
-            locTypesWgt: 1,
-            orgTypes: [5, 7],
-            orgTypesWgt: 5000,
-            sizes: [1, 2, 3],
-            sizesWgt: 1,
-            cals: [1],
-            calsWgt: 1,
-            states: [5, 6, 38, 43, 47],
-            statesWgt: 50,
-            traits: [3, 8, 9, 10, 11, 13, 18],
-            traitsWgt: 100,
-            ageRanges: [2, 3],
-            ageRangesWgt: 1
-        })
-        .end((err, res) => {
-            res.status.should.be(400);
-            res.body.should.be.json;
-            res.body.status.should.equal(400);
-            res.body.message.should.equal('Please completely fill out the profile');
-        });
+            .post('/profile/makematchprofile')
+            .send({
+                token: teacherToken,
+                training: [1],
+                trainingWgt: 1,
+                locTypes: [1, 2, 3],
+                locTypesWgt: 1,
+                orgTypes: [5, 7],
+                orgTypesWgt: 5000,
+                sizes: [1, 2, 3],
+                sizesWgt: 1,
+                cals: [1],
+                calsWgt: 1,
+                states: [5, 6, 38, 43, 47],
+                statesWgt: 50,
+                traits: [3, 8, 9, 10, 11, 13, 18],
+                traitsWgt: 100,
+                ageRanges: [2, 3],
+                ageRangesWgt: 1
+            })
+            .end((err, res) => {
+                res.status.should.equal(400);
+                res.body.should.be.json;
+                res.body.status.should.equal(400);
+                res.body.message.should.equal('Please completely fill out the profile');
+            });
     });
 
     it('should return an error if sizes is missing', done => {
@@ -544,7 +546,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -574,7 +576,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -604,7 +606,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -633,7 +635,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -663,7 +665,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -692,7 +694,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -722,7 +724,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -752,7 +754,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -781,7 +783,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -811,7 +813,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -840,7 +842,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -870,7 +872,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -900,7 +902,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -929,7 +931,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -959,7 +961,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -988,7 +990,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -1018,7 +1020,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -1047,7 +1049,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -1077,7 +1079,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -1106,7 +1108,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -1136,7 +1138,7 @@ describe('submitting a matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
@@ -1165,40 +1167,40 @@ describe('submitting a matching profile', () => {
                 ageRanges: [2, 3],
             })
             .end((err, res) => {
-                res.status.should.be(400);
+                res.status.should.equal(400);
                 res.body.should.be.json;
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please completely fill out the profile');
             });
     });
 
-    it('should return an error if ageRangesWgt is not 1, 10, 50 or 100', {
+    it('should return an error if ageRangesWgt is not 1, 10, 50 or 100', done => {
         chai.request(server)
-        .post('/profile/makematchprofile')
-        .send({
-            token: teacherToken,
-            training: [1],
-            trainingWgt: 1,
-            locTypes: [1, 2, 3],
-            locTypesWgt: 1,
-            orgTypes: [5, 7],
-            orgTypesWgt: 50,
-            sizes: [1, 2, 3],
-            sizesWgt: 1,
-            cals: [1],
-            calsWgt: 1,
-            states: [5, 6, 38, 43, 47],
-            statesWgt: 50,
-            traits: [3, 8, 9, 10, 11, 13, 18],
-            traitsWgt: 100,
-            ageRanges: [2, 3],
-            ageRangesWgt: 1000
-        })
-        .end((err, res) => {
-            res.status.should.be(400);
-            res.body.should.be.json;
-            res.body.status.should.equal(400);
-            res.body.message.should.equal('Please completely fill out the profile');
-        });
+            .post('/profile/makematchprofile')
+            .send({
+                token: teacherToken,
+                training: [1],
+                trainingWgt: 1,
+                locTypes: [1, 2, 3],
+                locTypesWgt: 1,
+                orgTypes: [5, 7],
+                orgTypesWgt: 50,
+                sizes: [1, 2, 3],
+                sizesWgt: 1,
+                cals: [1],
+                calsWgt: 1,
+                states: [5, 6, 38, 43, 47],
+                statesWgt: 50,
+                traits: [3, 8, 9, 10, 11, 13, 18],
+                traitsWgt: 100,
+                ageRanges: [2, 3],
+                ageRangesWgt: 1000
+            })
+            .end((err, res) => {
+                res.status.should.equal(400);
+                res.body.should.be.json;
+                res.body.status.should.equal(400);
+                res.body.message.should.equal('Please completely fill out the profile');
+            });
     });
 });
