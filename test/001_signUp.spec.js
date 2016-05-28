@@ -328,7 +328,7 @@ describe('a user submits the sign up form', () => {
             .send({
                 email: 'testy@test.com',
                 displayName: 1000,
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!'
             })
             .end((err, res) => {
@@ -337,6 +337,10 @@ describe('a user submits the sign up form', () => {
                 res.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please provide a display name that is text less than 50 characters');
+                res.body.form.email.should.equal('testy@test.com');
+                res.body.form.displayName.should.equal(1000);
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
                 done();
             })
     })
@@ -346,7 +350,7 @@ describe('a user submits the sign up form', () => {
             .send({
                 email: 'testy@test.com',
                 displayName: 'Ab illo tempore, ab est sed immemorabili. Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Qui ipsorum lingua Celtae, nostra Galli appellantur.',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!'
             })
             .end((err, res) => {
@@ -355,6 +359,10 @@ describe('a user submits the sign up form', () => {
                 res.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please provide a display name that is text 50 characters or less');
+                res.body.form.email.should.equal('testy@test.com');
+                res.body.form.displayName.should.equal('Ab illo tempore, ab est sed immemorabili. Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Qui ipsorum lingua Celtae, nostra Galli appellantur.');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
                 done();
             })
     });
@@ -365,7 +373,7 @@ describe('a user submits the sign up form', () => {
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 lastName: 1000
             })
@@ -375,6 +383,11 @@ describe('a user submits the sign up form', () => {
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please enter a last name that is text and less than 30 characters');
+                res.body.form.email.should.equal('testy@test.com');
+                res.body.form.displayName.should.equal('Testy');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
+                res.body.form.lastName.should.equal(1000);
                 done();
             });
     });
@@ -385,7 +398,7 @@ describe('a user submits the sign up form', () => {
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 lastName: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in'
             })
@@ -395,6 +408,11 @@ describe('a user submits the sign up form', () => {
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please enter a last name that is text and less than 30 characters');
+                res.body.form.email.should.equal('testy@test.com');
+                res.body.form.displayName.should.equal('Testy');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
+                res.body.form.lastName.should.equal('Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in');
                 done();
             });
     });
@@ -405,7 +423,7 @@ describe('a user submits the sign up form', () => {
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 description: 1000
             })
@@ -415,6 +433,11 @@ describe('a user submits the sign up form', () => {
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please enter a description that is text and less than 500 characters');
+                res.body.form.email.should.equal('testy@test.com');
+                res.body.form.displayName.should.equal('Testy');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
+                res.body.form.description.should.equal(1000);
                 done();
             });
     });
@@ -425,7 +448,7 @@ describe('a user submits the sign up form', () => {
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 description: 'Vivamus sagittis lacus vel augue laoreet rutrum faucibus. Mercedem aut nummos unde unde extricat, amaras. Quam diu etiam furor iste tuus nos eludet? Prima luce, cum quibus mons aliud consensu ab eo. Quis aute iure reprehenderit in voluptate velit esse. Phasellus laoreet lorem vel dolor tempus vehicula. Ullamco laboris nisi ut aliquid ex ea commodi consequat. Salutantibus vitae elit libero, a pharetra augue. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Praeterea iter est quasdam res quas ex communi. Curabitur est gravida et libero vitae dictum. Contra legem facit qui id facit quod lex prohibet. Plura mihi bona sunt, inclinet, amari petere vellent. Quisque ut dolor gravida, placerat libero vel, euismod. Quid securi etiam tamquam eu fugiat nulla pariatur. A communi observantia non est recedendum. Non equidem invideo, miror magis posuere velit aliquet. Quae vero auctorem tractata ab fiducia dicuntur. Nec dubitamus multa iter quae et nos invenerat. Hi omnes lingua, institutis, legibus inter se differunt. Etiam habebis sem dicantur magna mollis euismod. Quam temere in vitiis, legem sancimus haerentia. Idque Caesaris facere voluntate liceret: sese habere. Ab illo tempore, ab est sed immemorabili. Paullum deliquit, ponderibus modulisque suis ratio utitur. Cras mattis iudicium purus sit amet fermentum.'
             })
@@ -435,6 +458,11 @@ describe('a user submits the sign up form', () => {
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please enter a description that is text and less than 500 characters');
+                res.body.form.email.should.equal('testy@test.com');
+                res.body.form.displayName.should.equal('Testy');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
+                res.body.form.description.should.equal('Vivamus sagittis lacus vel augue laoreet rutrum faucibus. Mercedem aut nummos unde unde extricat, amaras. Quam diu etiam furor iste tuus nos eludet? Prima luce, cum quibus mons aliud consensu ab eo. Quis aute iure reprehenderit in voluptate velit esse. Phasellus laoreet lorem vel dolor tempus vehicula. Ullamco laboris nisi ut aliquid ex ea commodi consequat. Salutantibus vitae elit libero, a pharetra augue. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Praeterea iter est quasdam res quas ex communi. Curabitur est gravida et libero vitae dictum. Contra legem facit qui id facit quod lex prohibet. Plura mihi bona sunt, inclinet, amari petere vellent. Quisque ut dolor gravida, placerat libero vel, euismod. Quid securi etiam tamquam eu fugiat nulla pariatur. A communi observantia non est recedendum. Non equidem invideo, miror magis posuere velit aliquet. Quae vero auctorem tractata ab fiducia dicuntur. Nec dubitamus multa iter quae et nos invenerat. Hi omnes lingua, institutis, legibus inter se differunt. Etiam habebis sem dicantur magna mollis euismod. Quam temere in vitiis, legem sancimus haerentia. Idque Caesaris facere voluntate liceret: sese habere. Ab illo tempore, ab est sed immemorabili. Paullum deliquit, ponderibus modulisque suis ratio utitur. Cras mattis iudicium purus sit amet fermentum.');
                 done();
             });
     });
@@ -445,7 +473,7 @@ describe('a user submits the sign up form', () => {
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 state: 1000
             })
@@ -455,6 +483,11 @@ describe('a user submits the sign up form', () => {
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please enter a two-letter state abbreviation');
+                res.body.form.email.should.equal('testy@test.com');
+                res.body.form.displayName.should.equal('Testy');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
+                res.body.form.state.should.equal(1000);
                 done();
             });
     });
@@ -465,7 +498,7 @@ describe('a user submits the sign up form', () => {
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 state: 'Colorado'
             })
@@ -475,6 +508,11 @@ describe('a user submits the sign up form', () => {
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please enter a two-letter state abbreviation');
+                res.body.form.email.should.equal('testy@test.com');
+                res.body.form.displayName.should.equal('Testy');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
+                res.body.form.state.should.equal('Colorado');
                 done();
             });
     });
@@ -485,7 +523,7 @@ describe('a user submits the sign up form', () => {
             .send({
                 email: 'testy@test.com',
                 displayName: 'Testy',
-                isTeacher: 1,
+                isTeacher: true,
                 password: '1Password!',
                 avatarUrl: 'ww.funky/alksdjf'
             })
@@ -495,6 +533,11 @@ describe('a user submits the sign up form', () => {
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
                 res.body.message.should.equal('Please enter a valid url for your profile image');
+                res.body.form.email.should.equal('testy@test.com');
+                res.body.form.displayName.should.equal('Testy');
+                res.body.form.isTeacher.should.equal(true);
+                res.body.form.password.should.equal('1Password!');
+                res.body.form.avatarUrl.should.equal('ww.funky/alksdjf');
                 done();
             });
     });
