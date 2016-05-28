@@ -16,7 +16,29 @@ const server = require('../app');
 
 const should = chai.should();
 
+const pg = require('pg');
+
 chai.use(chaiHttp);
+
+var authhost = process.env.AUTHPG_PORT_5432_TCP_ADDR || localhost;
+var authport = process.env.AUTHPG_PORT_5432_TCP_PORT || 5432;
+var
+beforeEach(done => {
+  let constring = "postgres://" + authhost + "/" + authport;
+  pg.connect(conString, function(err, client, pgDone) {
+    if(err) {
+      return console.error('error fetching client from pool', err);
+    }
+    client.query('delete from users', function(err, result) {
+      pgDone();
+      done();
+
+      if(err) {
+        return console.error('error running query', err);
+      }
+    });
+  });
+})
 
 describe('a user submits the sign up form', () => {
     it('should create a teacher user with all profile information included', done => {
