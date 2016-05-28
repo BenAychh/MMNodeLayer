@@ -11,7 +11,7 @@ chai.use(chaiHttp);
 let teacherToken;
 let schoolToken;
 
-describe('submitting a matching profile', () => {
+describe('a user submits their matching profile for the first time', () => {
 
     before(done => {
         chai.request(server)

@@ -12,69 +12,6 @@ beforeEach(function(done) {
         .send({})
 });
 
-describe('get user profile', () => {
-    it('should get user profile information with valid email', done => {
-        chai.request(server)
-            .post('/profiles/create')
-            .send({
-                email: 'testy@test.com',
-                displayName: 'Testy'
-            })
-            .end((err, res) => {
-                if (!err) {
-                    chai.request(server)
-                        .post('/profiles/get')
-                        .send({
-                            email: 'testy@test.com',
-                        })
-                        .end((err, res) => {
-                            res.should.have.status(200);
-                            res.should.be.json;
-                            res.body.should.be.a('object');
-                            res.body.status.should.equal(200);
-                            res.body.message.should.equal('Returning profile');
-                            res.body.should.have.property('profile');
-                            res.body.profile.should.be.a('object');
-                            res.body.profile.should.have.property('email');
-                            res.body.profile.email.should.equal('testy@test.com');
-                            res.body.profile.should.have.property('displayName');
-                            res.body.profile.displayName.should.equal('Testy');
-                            done();
-                        })
-                }
-            });
-    })
-    it('should return error if the user does not exist', done => {
-        chai.request(server)
-            .post('/profiles/get')
-            .send({
-                email: 'testy@test.com',
-            })
-            .end((err, res) => {
-                res.should.have.status(400);
-                res.should.be.json;
-                res.body.should.be.a('object');
-                res.body.status.should.equal(400);
-                res.body.message.should.equal('Profile does not exist in database');
-                done();
-            })
-    })
-    it('should return error with malformed email', done => {
-        chai.request(server)
-            .post('/profiles/get')
-            .send({
-                email: 'testy@test',
-            })
-            .end((err, res) => {
-                res.should.have.status(400);
-                res.should.be.json;
-                res.body.should.be.a('object');
-                res.body.status.should.equal(400);
-                res.body.message.should.equal('Please send a valid email');
-                done();
-            })
-    })
-});
 describe('updating user profile information', () => {
     it('should update profile information when valid updates are passed', done => {
         chai.request(server)
