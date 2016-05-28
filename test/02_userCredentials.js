@@ -41,7 +41,7 @@ describe('updating user profile information', () => {
                 }
             });
     })
- 
+
     it('should return an error if the email is malformed', done => {
         chai.request(server)
             .post('/profiles/update')

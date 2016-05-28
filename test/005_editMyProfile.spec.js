@@ -1,8 +1,5 @@
 'use strict'
 
-let teacherToken;
-let schoolToken;
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app');
@@ -10,6 +7,9 @@ const server = require('../app');
 const should = chai.should();
 
 chai.use(chaiHttp);
+
+let teacherToken;
+let schoolToken;
 
 describe('a user updates their profile', () => {
 
