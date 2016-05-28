@@ -6,12 +6,13 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-const token;
+let teacherToken;
+let schoolToken;
 
 describe('submitting a matching profile', () => {
 
     before(done => {
-        return chai.request(server)
+        chai.request(server)
             .post('/auth/signup')
             .send({
                 email: 'teacher@test.com',
@@ -23,7 +24,8 @@ describe('submitting a matching profile', () => {
                 state: 'CO',
                 avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
             })
-            .then(() => {
+            .then((err, res) => {
+                teacherToken = res.body.token;
                 chai.request(server)
                     .post('/auth/signup')
                     .send({
@@ -36,19 +38,69 @@ describe('submitting a matching profile', () => {
                         avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
                     })
                     .end((err, res) => {
-                        token = res.body.token;
+                        schoolToken = res.body.token;
                         done();
                     });
             });
-            
     });
 
     it('should create a matching profile with a complete submission', done => {
-
+        chai.request(server)
+            .post('/profile/makematchprofile')
+            .send({
+                token: teacherToken,
+                training: [1],
+                trainingWgt: 1,
+                locTypes: [1, 2, 3],
+                locTypesWgt: 1,
+                orgTypes: [5, 7],
+                orgTypesWgt: 50,
+                sizes: [1, 2, 3],
+                sizesWgt: 1,
+                cals: [1],
+                calsWgt: 1,
+                states: [5, 6, 38, 43, 47],
+                statesWgt: 50,
+                traits: [3, 8, 9, 10, 11, 13, 18],
+                traitsWgt: 100,
+                ageRanges: [2, 3],
+                ageRangesWgt: 1
+            })
+            .end((err, res) => {
+                res.status.should.equal(200);
+                res.should.be.json;
+                res.body.status.should.equal(200);
+                res.body.message.should.equal('Match profile created for school@test.com');
+            });
     });
 
     it('should return an error if token is missing', done => {
-
+        chai.request(server)
+            .post('/profile/makematchprofile')
+            .send({
+                training: [1],
+                trainingWgt: 1,
+                locTypes: [1, 2, 3],
+                locTypesWgt: 1,
+                orgTypes: [5, 7],
+                orgTypesWgt: 50,
+                sizes: [1, 2, 3],
+                sizesWgt: 1,
+                cals: [1],
+                calsWgt: 1,
+                states: [5, 6, 38, 43, 47],
+                statesWgt: 50,
+                traits: [3, 8, 9, 10, 11, 13, 18],
+                traitsWgt: 100,
+                ageRanges: [2, 3],
+                ageRangesWgt: 1
+            })
+            .end((err, res) => {
+                res.status.should.be(403);
+                res.body.should.be.json;
+                res.body.status.should.equal(403);
+                res.body.message.should.equal('Please log in');
+            });
     });
 
     it('should append an active status to the submission to the microservice', done => {
@@ -57,15 +109,62 @@ describe('submitting a matching profile', () => {
     });
 
     it('should return an error if training is missing', done => {
-
+        chai.request(server)
+            .post('/profile/makematchprofile')
+            .send({
+                token: teacherToken,
+                trainingWgt: 1,
+                locTypes: [1, 2, 3],
+                locTypesWgt: 1,
+                orgTypes: [5, 7],
+                orgTypesWgt: 50,
+                sizes: [1, 2, 3],
+                sizesWgt: 1,
+                cals: [1],
+                calsWgt: 1,
+                states: [5, 6, 38, 43, 47],
+                statesWgt: 50,
+                traits: [3, 8, 9, 10, 11, 13, 18],
+                traitsWgt: 100,
+                ageRanges: [2, 3],
+                ageRangesWgt: 1
+            })
+            .end((err, res) => {
+                res.status.should.be(400);
+                res.body.should.be.json;
+                res.body.status.should.equal(400);
+                res.body.message.should.equal('Please completely fill out the profile');
+            });
     });
 
-    it('should return an error if training is not an array of numbers', done => {
-
-    });
-
-    it('should return an error if user is a school and training has more than one element', done => {
-
+    it('should return an error if training is not an array', done => {
+        chai.request(server)
+            .post('/profile/makematchprofile')
+            .send({
+                token: teacherToken,
+                training: 'wat',
+                trainingWgt: 1,
+                locTypes: [1, 2, 3],
+                locTypesWgt: 1,
+                orgTypes: [5, 7],
+                orgTypesWgt: 50,
+                sizes: [1, 2, 3],
+                sizesWgt: 1,
+                cals: [1],
+                calsWgt: 1,
+                states: [5, 6, 38, 43, 47],
+                statesWgt: 50,
+                traits: [3, 8, 9, 10, 11, 13, 18],
+                traitsWgt: 100,
+                ageRanges: [2, 3],
+                ageRangesWgt: 1
+            })
+            .end((err, res) => {
+                res.status.should.be(400);
+                res.body.should.be.json;
+                res.body.status.should.equal(400);
+                res.body.message.should.equal('Please completely fill out the profile');
+            });
     });
 
     it('should return an error if trainingWgt is missing', done => {
@@ -80,7 +179,7 @@ describe('submitting a matching profile', () => {
 
     });
 
-    it('should return an error if locTypes is not an array of numbers', done => {
+    it('should return an error if locTypes is not an array', done => {
 
     });
 
@@ -100,7 +199,7 @@ describe('submitting a matching profile', () => {
 
     });
 
-    it('should return an error if orgTypes is not an array of numbers', done => {
+    it('should return an error if orgTypes is not an array', done => {
 
     });
 
@@ -120,7 +219,7 @@ describe('submitting a matching profile', () => {
 
     });
 
-    it('should return an error if sizes is not an array of numbers', done => {
+    it('should return an error if sizes is not an array', done => {
 
     });
 
@@ -140,7 +239,7 @@ describe('submitting a matching profile', () => {
 
     });
 
-    it('should return an error if cals is not an array of numbers', done => {
+    it('should return an error if cals is not an array', done => {
 
     });
 
@@ -160,7 +259,7 @@ describe('submitting a matching profile', () => {
 
     });
 
-    it('should return an error if states is not an array of numbers', done => {
+    it('should return an error if states is not an array', done => {
 
     });
 
@@ -180,7 +279,7 @@ describe('submitting a matching profile', () => {
 
     });
 
-    it('should return an error if traits is not an array of numbers', done => {
+    it('should return an error if traits is not an array', done => {
 
     });
 
@@ -196,7 +295,7 @@ describe('submitting a matching profile', () => {
 
     });
 
-    it('should return an error if ageRanges is not an array of numbers', done => {
+    it('should return an error if ageRanges is not an array', done => {
 
     });
 
