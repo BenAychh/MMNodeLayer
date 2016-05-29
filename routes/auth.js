@@ -4,9 +4,15 @@ var router = express.Router();
 var rp = require('request-promise');
 var emailValidator = require('email-validator');
 var validUrl = require('valid-url');
+var jwt = require('jsonwebtoken');
 
 var authService = 'http://localhost:8000/'
 var profileService = 'http://localhost:8001/'
+
+var secretKey = process.env.secretKey;
+if (!secretKey) {
+  secretKey = 'shhhhh';
+}
 
 router.post('/signup', (req, res, next) => {
   if (req.body.email) {
@@ -164,6 +170,7 @@ router.post('/signup', (req, res, next) => {
   };
   rp(authOptions)
   .then(parsedBody => {
+    console.log('here!');
     let profileOptions = {
       method: 'POST',
       uri: profileService + "create",
@@ -183,7 +190,10 @@ router.post('/signup', (req, res, next) => {
       res.json({
         message: 'Account created for ' + req.body.email,
         status: 201,
-        token: parsedBody.token,
+        token: jwt.sign({
+          email: req.body.email,
+          isTeacher: req.body.isTeacher,
+        }, secretKey),
       })
     })
   })
@@ -249,7 +259,7 @@ router.post('/login', (req, res, next) => {
     res.status(200);
     res.json({
       status: 200,
-      token: parsedBody.token,
+      token: jwt.sign(parsedBody.tokenize, secretKey),
     })
   })
   .catch(errorBody => {
