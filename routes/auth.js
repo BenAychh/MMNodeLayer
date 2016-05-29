@@ -8,6 +8,7 @@ var jwt = require('jsonwebtoken');
 
 var authService = 'http://localhost:8000/'
 var profileService = 'http://localhost:8001/'
+var matchService = 'http://localhost:8002/'
 
 var secretKey = process.env.secretKey;
 if (!secretKey) {
@@ -170,7 +171,6 @@ router.post('/signup', (req, res, next) => {
   };
   rp(authOptions)
   .then(parsedBody => {
-    console.log('here!');
     let profileOptions = {
       method: 'POST',
       uri: profileService + "create",
@@ -270,6 +270,166 @@ router.post('/login', (req, res, next) => {
       form: req.body,
     });
   })
+});
+router.post('/deactivate', (req, res, next) => {
+  if (req.body.token) {
+    jwt.verify(req.body.token, secretKey, function(err, decoded) {
+      if (!err) {
+        let deactivateOptions = {
+          method: 'PUT',
+          uri: authService + "deactivate",
+          body: {
+              email: decoded.email,
+          },
+          json: true // Automatically stringifies the body to JSON
+        };
+        let promises = [];
+        promises.push(rp(JSON.parse(JSON.stringify(deactivateOptions))));
+        deactivateOptions.uri = matchService + "deactivate";
+        promises.push(rp(deactivateOptions));
+        Promise.all(promises)
+        .then(() => {
+          res.status(200);
+          res.json({
+            status: 200,
+            message: "Account deactivated",
+          });
+        })
+        .catch(errorBody => {
+          res.status(errorBody.statusCode);
+          res.json({
+            status: errorBody.statusCode,
+            message: errorBody.error.message,
+          });
+        })
+      } else {
+        res.status(401);
+        res.json({
+          message: 'Invalid token',
+          status: 401,
+        })
+      }
+    });
+  } else {
+    res.status(400);
+    res.json({
+      message: "Token not sent",
+      status: 400,
+    })
+  }
+});
+
+router.post('/activate', (req, res, next) => {
+  if (req.body.token) {
+    jwt.verify(req.body.token, secretKey, function(err, decoded) {
+      if (!err) {
+        let activateOptions = {
+          method: 'PUT',
+          uri: authService + "activate",
+          body: {
+              email: decoded.email,
+          },
+          json: true // Automatically stringifies the body to JSON
+        };
+        let promises = [];
+        promises.push(rp(JSON.parse(JSON.stringify(activateOptions))));
+        activateOptions.uri = matchService + "deactivate";
+        promises.push(rp(activateOptions));
+        Promise.all(promises)
+        .then(() => {
+          res.status(200);
+          res.json({
+            status: 200,
+            message: "Account activated",
+          });
+        })
+        .catch(errorBody => {
+          res.status(errorBody.statusCode);
+          res.json({
+            status: errorBody.statusCode,
+            message: errorBody.error.message,
+          });
+        })
+      } else {
+        res.status(401);
+        res.json({
+          message: 'Invalid token',
+          status: 401,
+        })
+      }
+    });
+  } else {
+    res.status(400);
+    res.json({
+      message: "Token not sent",
+      status: 400,
+    })
+  }
+})
+
+router.post('/update', (req, res, next) => {
+  if (req.body.password) {
+    if (!validatePassword(req.body.password)) {
+      res.status(400);
+      res.json({
+        status: 400,
+        message: 'Passwords must be at least 8 characters and contain at least one uppercase and lowecase letter, one number, and one special character.',
+        form: req.body
+      })
+      return;
+    }
+  } else {
+    res.status(400);
+    res.json({
+      status: 400,
+      message: 'Password field cannot be blank',
+      form: req.body,
+    })
+    return;
+  }
+  if (req.body.token) {
+    jwt.verify(req.body.token, secretKey, function(err, decoded) {
+      if (!err) {
+        let authOptions = {
+          method: 'PUT',
+          uri: authService + "update",
+          body: {
+              email: decoded.email,
+              password: req.body.password,
+          },
+          json: true // Automatically stringifies the body to JSON
+        };
+        rp(authOptions)
+        .then(parsedBody => {
+          res.status(200);
+          res.json({
+            message: 'User password updated',
+            status: 200,
+          })
+        })
+        .catch(errorBody => {
+          res.status(errorBody.statusCode);
+          res.json({
+            status: errorBody.statusCode,
+            message: errorBody.error.message,
+            form: req.body,
+          });
+        });
+      } else {
+        res.status(401);
+        res.json({
+          message: 'Invalid token',
+          status: 401,
+        })
+      }
+    });
+  } else {
+    res.status(401);
+    res.json({
+      message: 'Missing token',
+      status: 401,
+    })
+  }
 });
 
 function validatePassword(password) {
