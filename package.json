@@ -16,6 +16,7 @@
     "express": "~4.13.1",
     "jsonwebtoken": "^7.0.0",
     "jwt-decode": "^2.0.1",
+    "mongodb": "^2.1.20",
     "morgan": "~1.6.1",
     "pg": "^4.5.5",
     "request-promise": "^3.0.0",

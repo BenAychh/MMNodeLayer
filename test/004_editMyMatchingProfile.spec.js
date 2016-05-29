@@ -5,6 +5,9 @@ const chaiHttp = require('chai-http');
 const server = require('../app');
 
 const should = chai.should();
+const returnedTeacherToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJ0cnVlIiwiaWF0IjoxNDY0NDgwNDA5fQ.Yjr85nvvXfUZbUwIseoc4rRzKuaZqnpWd05KdKcwFjk';
+const returnedSchoolToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDQ4MDQ0NH0.mqRJ63CLMtHW2lVuwkI7_WrDdTrbzK3_BHR_5onhxj4';
+
 
 chai.use(chaiHttp);
 

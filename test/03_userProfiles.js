@@ -1,16 +1,58 @@
+'use strict';
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../app');
 
 var should = chai.should();
+const pg = require('pg');
 
 chai.use(chaiHttp);
 
+var authhost = process.env.AUTHPG_PORT_5432_TCP_ADDR || 'localhost';
+var authport = process.env.AUTHPG_PORT_5432_TCP_PORT || 5432;
+var profilehost = process.env.PROFILEPG_PORT_5432_TCP_ADDR || 'localhost';
+var profileport = process.env.PROFILEPG_PORT_5432_TCP_PORT || 5432;
 beforeEach(function(done) {
-    chai.request(server)
-        .post('/auth/signup')
-        .send({})
-});
+  let authConString = "postgres://" + authhost + ":" + authport + "/Users";
+  let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
+  pg.connect(authConString, (err, client, pgDone1) => {
+    if (err) {
+      return console.error('error fetching client from pool', err);
+    }
+    client.query('delete from users', (err, result) => {
+      pgDone1();
+      pg.connect(profileConString, (err, client, pgDone2) => {
+        if (err) {
+          return console.error('error fetching client from pool', err);
+        }
+        client.query('delete from profiles', (err, result) => {
+          pgDone2();
+          chai.request(server)
+            .post('/auth/signup')
+            .send({
+              email: 'test@test.com',
+              password: '1Password!',
+              displayName: 'Testy',
+              lastName: 'Mctestface',
+              isTeacher: true,
+              description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
+              state: 'CO',
+              avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
+            })
+            .end((err, res) => {
+              done();
+            })
+          if (err) {
+            return console.error('error running query', err);
+          }
+        });
+      });
+      if (err) {
+        return console.error('error running query', err);
+      }
+    });
+  });
+})
 
 describe('updating user profile information', () => {
     it('should update profile information when valid updates are passed', done => {
