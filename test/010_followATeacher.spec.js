@@ -26,9 +26,6 @@ before(function(done) {
     client.query('delete from users', (err, result) => {
       pgDone1();
       pg.connect(profileConString, (err, client, pgDone2) => {
-        if (err) {
-          return console.error('error fetching client from pool', err);
-        }
         client.query('delete from profiles', (err, result) => {
           pgDone2();
           chai.request(server)
@@ -73,6 +70,9 @@ before(function(done) {
                       done();
                     });
                 });
+              if (err) {
+                return console.error('error running query', err);
+              }
             });
         });
         if (err) {
@@ -80,9 +80,6 @@ before(function(done) {
         }
       });
     });
-    if (err) {
-      return console.error('error running query', err);
-    }
   });
 });
 
@@ -174,6 +171,7 @@ describe('a user updates their profile', () => {
         followEmail: 'teacher3@test.com'
       })
       .end((err, res) => {
+        console.log(res.body);
         res.status.should.equal(400);
         res.should.be.json;
         res.body.status.should.equal(400);

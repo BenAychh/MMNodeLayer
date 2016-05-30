@@ -148,14 +148,22 @@ describe('a teacher user makes a request to unfollow a teacher', () => {
             .put('/profile/unfollow')
             .send({
                 token: teacherToken,
-                unfollowEmail: 'teacher3@test.com'
+                unfollowEmail: 'teacher2@test.com'
             })
             .end((err, res) => {
-                res.status.should.equal(400);
-                res.should.be.json;
-                res.body.status.should.equal(400);
-                res.body.message.should.equal('You are not following teacher3@test.com');
-                done();
+              chai.request(server)
+                  .put('/profile/unfollow')
+                  .send({
+                      token: teacherToken,
+                      unfollowEmail: 'teacher2@test.com'
+                  })
+                  .end((err, res) => {
+                      res.status.should.equal(400);
+                      res.should.be.json;
+                      res.body.status.should.equal(400);
+                      res.body.message.should.equal('You are not following teacher2@test.com');
+                      done();
+                  });
             });
     });
 
