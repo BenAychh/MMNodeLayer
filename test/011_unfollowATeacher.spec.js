@@ -9,7 +9,6 @@ const should = chai.should();
 chai.use(chaiHttp);
 
 let teacherToken;
-let schoolToken;
 
 describe('a teacher user makes a request to follow a teacher', () => {
 
