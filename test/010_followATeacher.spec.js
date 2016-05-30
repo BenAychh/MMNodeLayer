@@ -11,7 +11,7 @@ chai.use(chaiHttp);
 let teacherToken;
 let schoolToken;
 
-describe('a user updates their profile', () => {
+describe('a teacher user makes a request to follow a teacher', () => {
 
     before(done => {
         chai.request(server)
@@ -97,7 +97,8 @@ describe('a user updates their profile', () => {
             })
             .end((err, res) => {
                 res.status.should.equal(403);
-                res.should.be.json;chrome
+                res.should.be.json;
+                chrome
                 res.body.status.should.equal(403);
                 res.body.message.should.equal('Only other teachers may follow teachers');
             });
