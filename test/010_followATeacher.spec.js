@@ -11,6 +11,49 @@ chai.use(chaiHttp);
 let teacherToken;
 let schoolToken;
 
+before(function(done) {
+  let authConString = "postgres://" + authhost + ":" + authport + "/Users";
+  let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
+  pg.connect(authConString, (err, client, pgDone1) => {
+    if(err) {
+      return console.error('error fetching client from pool', err);
+    }
+    client.query('delete from users', (err, result) => {
+      pgDone1();
+      pg.connect(profileConString, (err, client, pgDone2) => {
+        if(err) {
+          return console.error('error fetching client from pool', err);
+        }
+        client.query('delete from profiles', (err, result) => {
+          pgDone2();
+          chai.request(server)
+              .post('/auth/signup')
+              .send({
+                  email: 'teacher@test.com',
+                  isTeacher: true,
+                  password: '1Password!',
+                  displayName: 'Testy',
+                  lastName: 'Mctestface',
+                  description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
+                  state: 'CO',
+                  avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
+              })
+              .end((err, res) => {
+                  teacherToken = res.body.token;
+                  done();
+              });
+          if(err) {
+            return console.error('error running query', err);
+          }
+        });
+      });
+      if(err) {
+        return console.error('error running query', err);
+      }
+    });
+  });
+})
+
 describe('a user updates their profile', () => {
 
     before(done => {
@@ -32,7 +75,7 @@ describe('a user updates their profile', () => {
                     .post('/auth/signup')
                     .send({
                         email: 'school@test.com',
-                        isTeacher: 0,
+                        isTeacher: true,
                         password: '1Password!',
                         displayName: 'Testy',
                         description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
