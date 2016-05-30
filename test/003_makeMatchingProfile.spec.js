@@ -139,9 +139,9 @@ before(function(done) {
             })
             .end((err, res) => {
               console.log(res);
-              res.error.status.should.equal(401);
+              res.status.should.equal(200);
               res.body.should.be.json;
-              res.body.status.should.equal(401);
+              res.body.status.should.equal(200);
               res.body.message.should.equal('Please log in');
               done();
             });
