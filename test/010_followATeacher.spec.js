@@ -97,7 +97,7 @@ describe('a user updates their profile', () => {
             })
             .end((err, res) => {
                 res.status.should.equal(403);
-                res.should.be.json;
+                res.should.be.json;chrome
                 res.body.status.should.equal(403);
                 res.body.message.should.equal('Only other teachers may follow teachers');
             });
