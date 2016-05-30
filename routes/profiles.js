@@ -260,10 +260,10 @@ router.post('/makematchprofile', (req, res, next) => {
       }
     });
   } else {
-    res.status(200);
+    res.status(401);
     res.json({
       message: 'Please log in',
-      status: 200,
+      status: 401,
     })
     return;
   }
