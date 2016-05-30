@@ -9,53 +9,81 @@ const should = chai.should();
 chai.use(chaiHttp);
 
 let teacherToken;
-let schoolToken;
 
-describe('a teacher user makes a request to follow a teacher', () => {
-
-    before(done => {
-        chai.request(server)
+var authhost = process.env.AUTHPG_PORT_5432_TCP_ADDR || 'localhost';
+var authport = process.env.AUTHPG_PORT_5432_TCP_PORT || 5432;
+var profilehost = process.env.PROFILEPG_PORT_5432_TCP_ADDR || 'localhost';
+var profileport = process.env.PROFILEPG_PORT_5432_TCP_PORT || 5432;
+const pg = require('pg');
+before(function(done) {
+  let authConString = "postgres://" + authhost + ":" + authport + "/Users";
+  let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
+  pg.connect(authConString, (err, client, pgDone1) => {
+    if (err) {
+      return console.error('error fetching client from pool', err);
+    }
+    client.query('delete from users', (err, result) => {
+      pgDone1();
+      pg.connect(profileConString, (err, client, pgDone2) => {
+        if (err) {
+          return console.error('error fetching client from pool', err);
+        }
+        client.query('delete from profiles', (err, result) => {
+          pgDone2();
+          chai.request(server)
             .post('/auth/signup')
             .send({
-                email: 'teacher@test.com',
-                isTeacher: 1,
-                password: '1Password!',
-                displayName: 'Testy',
-                lastName: 'Mctestface',
-                description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
-                state: 'CO',
-                avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
+              email: 'teacher@test.com',
+              isTeacher: true,
+              password: '1Password!',
+              displayName: 'Testy',
+              lastName: 'Mctestface',
+              description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
+              state: 'CO',
+              avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
             })
             .end((err, res) => {
-                teacherToken = res.body.token;
-                chai.request(server)
-                    .post('/auth/signup')
-                    .send({
-                        email: 'teacher2@test.com',
-                        isTeacher: 1,
-                        password: '1Password!',
-                        displayName: 'Testy',
-                        description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
-                        state: 'CO',
-                        avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
-                    })
-                    .end((err, res) => {
-                        chai.request(server)
-                            .put('/matches/follow')
-                            .send({
-                                token: teacherToken,
-                                followEmail: 'teacher2@test.com'
-                            })
-                            .end((err, res) => {
-                                done();
-                            });
-                    });
+              teacherToken = res.body.token;
+              chai.request(server)
+                .post('/auth/signup')
+                .send({
+                  email: 'teacher2@test.com',
+                  isTeacher: true,
+                  password: '1Password!',
+                  displayName: 'Testy',
+                  description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
+                  state: 'CO',
+                  avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
+                })
+                .end((err, res) => {
+                  chai.request(server)
+                  .put('/profile/follow')
+                  .send({
+                    token: teacherToken,
+                    followEmail: 'teacher2@test.com',
+                  })
+                  .end((err, res) => {
+                    done();
+                  })
+                });
             });
+        });
+        if (err) {
+          return console.error('error running query', err);
+        }
+      });
     });
+    if (err) {
+      return console.error('error running query', err);
+    }
+  });
+});
+
+describe('a teacher user makes a request to unfollow a teacher', () => {
 
     it('should remove a teacher user from a teacher user\'s follow array', done => {
         chai.request(server)
-            .put('/matches/unfollow')
+            .put('/profile/unfollow')
             .send({
                 token: teacherToken,
                 unfollowEmail: 'teacher2@test.com'
@@ -65,19 +93,20 @@ describe('a teacher user makes a request to follow a teacher', () => {
                 res.should.be.json;
                 res.body.status.should.equal(200);
                 res.body.message.should.equal('You have unfollowed teacher2@test.com');
+                done();
             });
     });
 
     it('should return an error if the token is missing', done => {
         chai.request(server)
-            .put('/matches/unfollow')
+            .put('/profile/unfollow')
             .send({
                 unfollowEmail: 'teacher2@test.com'
             })
             .end((err, res) => {
-                res.status.should.equal(403);
+                res.status.should.equal(401);
                 res.should.be.json;
-                res.body.status.should.equal(403);
+                res.body.status.should.equal(401);
                 res.body.message.should.equal('Please log in');
                 done();
             });
@@ -85,7 +114,7 @@ describe('a teacher user makes a request to follow a teacher', () => {
 
     it('should return an error if followEmail is missing', done => {
         chai.request(server)
-            .put('/matches/unfollow')
+            .put('/profile/unfollow')
             .send({
                 token: teacherToken
             })
@@ -100,7 +129,7 @@ describe('a teacher user makes a request to follow a teacher', () => {
 
     it('should return an error if unfollowEmail is not an email', done => {
         chai.request(server)
-            .put('/matches/unfollow')
+            .put('/profile/unfollow')
             .send({
                 token: teacherToken,
                 unfollowEmail: 'teacher2@test'
@@ -109,14 +138,14 @@ describe('a teacher user makes a request to follow a teacher', () => {
                 res.status.should.equal(400);
                 res.should.be.json;
                 res.body.status.should.equal(400);
-                res.body.message.should.equal('Please provide the email of the user you want to unfollow');
+                res.body.message.should.equal('Invalid email, check the syntax and try again');
                 done();
             });
     });
 
     it('should return an error if the user to follow is not in the user\'s follow array', done => {
         chai.request(server)
-            .put('/matches/unfollow')
+            .put('/profile/unfollow')
             .send({
                 token: teacherToken,
                 unfollowEmail: 'teacher3@test.com'
@@ -125,7 +154,7 @@ describe('a teacher user makes a request to follow a teacher', () => {
                 res.status.should.equal(400);
                 res.should.be.json;
                 res.body.status.should.equal(400);
-                res.body.message.should.equal('You are not followign teacher3@test.com');
+                res.body.message.should.equal('You are not following teacher3@test.com');
                 done();
             });
     });
