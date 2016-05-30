@@ -75,7 +75,6 @@ router.put('/interest', (req, res, next) => {
             };
             rp(interestOptions)
             .then(parsedBody => {
-              console.log(parsedBody);
               res.status(200);
               res.json({
                 message: parsedBody.message,
@@ -112,6 +111,71 @@ router.put('/interest', (req, res, next) => {
       res.json({
         status: 400,
         message: 'Please include the email of the user you are interested in',
+      })
+      return;
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: 'Please log in',
+      status: 401,
+    })
+    return;
+  }
+})
+router.put('/uninterest', (req, res, next) => {
+  if (req.body.token) {
+    if (req.body.uninterestedIn) {
+      if (emailValidator.validate(req.body.uninterestedIn)) {
+        jwt.verify(req.body.token, secretKey, function(err, decoded) {
+          if (!err) {
+            let uninterestOptions = {
+              method: 'PUT',
+              uri: matchService + "removeinterest",
+              body: {
+                  email: decoded.email,
+                  uninterestedIn: req.body.uninterestedIn,
+              },
+              json: true // Automatically stringifies the body to JSON
+            };
+            rp(uninterestOptions)
+            .then(parsedBody => {
+              res.status(200);
+              res.json({
+                message: parsedBody.message,
+                status: 200,
+              })
+            })
+            .catch(errorBody => {
+              res.status(errorBody.statusCode);
+              res.json({
+                message: errorBody.message,
+                status: errorBody.statusCode,
+              });
+              return;
+            })
+          } else {
+            res.status(401);
+            res.json({
+              message: 'Invalid token, please log out then log back in',
+              status: 401,
+            })
+            return;
+          }
+        });
+      } else {
+        res.status(400);
+        res.json({
+          message: 'Invalid email, check the syntax and try again',
+          status: 400,
+        })
+        return;
+      }
+    } else {
+      res.status(400);
+      res.json({
+        status: 400,
+        message: 'Please include the email of the user you are removing interest in',
       })
       return;
     }
