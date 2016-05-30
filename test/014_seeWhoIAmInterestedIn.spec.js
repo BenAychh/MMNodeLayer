@@ -94,7 +94,7 @@ describe('a user makes a request to see the list of users they are interested in
                 res.status.should.equal(200);
                 res.should.be.json;
                 res.body.status.should.equal(200);
-                res.body.message.should.equal('Returning list of users you are interested in');
+                res.body.message.should.equal('Here are the users you have shown interest in');
                 res.body.list.should.eql(['school@test.com']);
                 done();
             });
