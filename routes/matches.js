@@ -232,5 +232,49 @@ router.get('/getinterest', (req, res, next) => {
     return;
   }
 })
+router.get('/getmatches', (req, res, next) => {
+  if (req.query.token) {
+    jwt.verify(req.query.token, secretKey, function(err, decoded) {
+      if(!err) {
+        let interestedOptions = {
+          method: 'GET',
+          uri: matchService + "matches?email=" + decoded.email,
+        };
+        rp(interestedOptions)
+        .then(parsedBody => {
+          res.status(200);
+          res.json({
+            list: JSON.parse(parsedBody).matches,
+            message: 'Here are your matches',
+            status: 200,
+          })
+        })
+        .catch(errorBody => {
+          console.log(errorBody);
+          res.status(errorBody.statusCode);
+          res.json({
+            message: errorBody.message,
+            status: errorBody.statusCode,
+          });
+          return;
+        })
+      } else {
+        res.status(401);
+        res.json({
+          message: 'Invalid token, please log out then log back in',
+          status: 401,
+        })
+        return;
+      }
+    });
+  } else {
+    res.status(401);
+    res.json({
+      message: 'Please log in',
+      status: 401,
+    })
+    return;
+  }
+})
 
 module.exports = router;
