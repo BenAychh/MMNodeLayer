@@ -367,9 +367,9 @@ router.post('/activate', (req, res, next) => {
   }
 })
 
-router.post('/update', (req, res, next) => {
-  if (req.body.password) {
-    if (!validatePassword(req.body.password)) {
+router.put('/changepassword', (req, res, next) => {
+  if (req.body.oldPassword) {
+    if (!validatePassword(req.body.oldPassword)) {
       res.status(400);
       res.json({
         status: 400,
@@ -382,7 +382,26 @@ router.post('/update', (req, res, next) => {
     res.status(400);
     res.json({
       status: 400,
-      message: 'Password field cannot be blank',
+      message: 'Please enter your old passwords',
+      form: req.body,
+    })
+    return;
+  }
+  if (req.body.newPassword) {
+    if (!validatePassword(req.body.newPassword)) {
+      res.status(400);
+      res.json({
+        status: 400,
+        message: 'Passwords must be at least 8 characters and contain at least one uppercase and lowecase letter, one number, and one special character.',
+        form: req.body
+      })
+      return;
+    }
+  } else {
+    res.status(400);
+    res.json({
+      status: 400,
+      message: 'Please enter your new passwords',
       form: req.body,
     })
     return;
@@ -395,7 +414,8 @@ router.post('/update', (req, res, next) => {
           uri: authService + "update",
           body: {
               email: decoded.email,
-              password: req.body.password,
+              oldPassword: req.body.oldPassword,
+              newPassword: req.body.newPassword,
           },
           json: true // Automatically stringifies the body to JSON
         };
@@ -403,7 +423,7 @@ router.post('/update', (req, res, next) => {
         .then(parsedBody => {
           res.status(200);
           res.json({
-            message: 'User password updated',
+            message: 'Password changed for ' + decoded.email,
             status: 200,
           })
         })
@@ -426,7 +446,7 @@ router.post('/update', (req, res, next) => {
   } else {
     res.status(401);
     res.json({
-      message: 'Missing token',
+      message: 'Please log in',
       status: 401,
     })
   }

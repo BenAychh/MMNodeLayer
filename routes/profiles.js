@@ -15,7 +15,7 @@ if (!secretKey) {
   secretKey = 'shhhhh';
 }
 
-router.post('/update', (req, res, next) => {
+router.put('/update', (req, res, next) => {
   if (req.body.token) {
     jwt.verify(req.body.token, secretKey, function(err, decoded) {
       if (!err) {
@@ -25,7 +25,7 @@ router.post('/update', (req, res, next) => {
           res.status(400);
           res.json({
             status: 400,
-            message: 'Please provide a display name that is text 50 characters or less',
+            message: 'Please provide a display name that is text less than 50 characters',
             form: req.body,
           })
           return;
@@ -34,7 +34,7 @@ router.post('/update', (req, res, next) => {
           res.status(400);
           res.json({
             status: 400,
-            message: 'Please provide a display name that is text 50 characters or less',
+            message: 'Please provide a display name that is text less than 50 characters',
             form: req.body,
           })
           return;
@@ -57,11 +57,20 @@ router.post('/update', (req, res, next) => {
           });
           return;
         }
+        if (req.body.lastName && !decoded.isTeacher) {
+          res.status(400);
+          res.json({
+            status: 400,
+            message: 'Schools may not have a last name',
+            form: req.body,
+          });
+          return;
+        }
         if (req.body.description && !isNaN(req.body.description)) {
           res.status(400);
           res.json({
             status: 400,
-            message: 'Please provide a description that is text and less than 500 characters',
+            message: 'Please enter a description that is text and less than 500 characters',
             form: req.body,
           });
           return;
@@ -70,7 +79,7 @@ router.post('/update', (req, res, next) => {
           res.status(400);
           res.json({
             status: 400,
-            message: 'Please provide a description that is text and less than 500 characters',
+            message: 'Please enter a description that is text and less than 500 characters',
             form: req.body,
           });
           return;
@@ -110,7 +119,7 @@ router.post('/update', (req, res, next) => {
         .then(parsedBody => {
           res.status(200);
           res.json({
-            message: 'Profile updated',
+            message: 'Profile updated for ' + decoded.email,
             status: 200,
           })
         })
@@ -231,7 +240,7 @@ router.post('/makematchprofile', (req, res, next) => {
             });
           })
         } else {
-          res.status(401);
+          res.status(400);
           res.json({
             message: 'Please completely fill out the profile',
             status: 400,
@@ -257,6 +266,51 @@ router.post('/makematchprofile', (req, res, next) => {
       status: 401,
     })
     return;
+  }
+})
+.get('/get', (req, res, next) => {
+  if (req.query.token) {
+    jwt.verify(req.query.token, secretKey, function(err, decoded) {
+      if (!err) {
+        let updateOptions = {
+          method: 'post',
+          uri: profileService + "get",
+          body: {
+            email: decoded.email,
+          },
+          json: true // Automatically stringifies the body to JSON
+        };
+        rp(updateOptions)
+        .then(parsedBody => {
+          res.status(200);
+          res.json({
+            message: 'Returning profile',
+            profile: parsedBody.profile,
+            status: 200,
+          })
+          return;
+        })
+        .catch(errorBody => {
+          res.status(errorBody.statusCode);
+          res.json({
+            message: errorBody.error.message,
+            status: errorBody.statusCode,
+          });
+        })
+      } else {
+        res.status(401);
+        res.json({
+          message: 'Bad token',
+          status: 401,
+        })
+      }
+    });
+  } else {
+    res.status(401);
+    res.json({
+      message: 'Please log in',
+      status: 401
+    })
   }
 })
 
