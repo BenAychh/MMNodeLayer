@@ -112,7 +112,7 @@ describe('a user updates their matching profile', () => {
                 res.status.should.equal(200);
                 res.should.be.json;
                 res.body.status.should.equal(200);
-                res.body.message.should.equal('Match profile created for school@test.com');
+                res.body.message.should.equal('Match profile created for teacher@test.com');
                 done();
             });
     });
@@ -139,9 +139,9 @@ describe('a user updates their matching profile', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                res.status.should.equal(200);
+                res.status.should.equal(401);
                 res.should.be.json;
-                res.body.status.should.equal(200);
+                res.body.status.should.equal(401);
                 res.body.message.should.equal('Please log in');
                 done();
             });

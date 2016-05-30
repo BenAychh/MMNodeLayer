@@ -182,6 +182,8 @@ router.post('/makematchprofile', (req, res, next) => {
             missing.push(key);
           } else if (!Array.isArray(req.body[key])) {
             malformed.push(key);
+          } else if (!decoded.isTeacher && schoolSingletons.indexOf(key) !== -1 && req.body[key].length > 1){
+            malformed.push(key);
           } else {
             let invalids = [];
             req.body[key].forEach(value => {
@@ -198,6 +200,8 @@ router.post('/makematchprofile', (req, res, next) => {
           if (inputKeys.indexOf(key) == -1) {
             missing.push(key);
           } else if (!Array.isArray(req.body[key])) {
+            malformed.push(key);
+          } else if (!decoded.isTeacher && schoolSingletons.indexOf(key) !== -1 && req.body[key].length > 1){
             malformed.push(key);
           } else {
             let invalids = [];

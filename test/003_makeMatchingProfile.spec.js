@@ -172,7 +172,6 @@ describe('a user submits their matching profile for the first time', () => {
                 ageRangesWgt: 1
             })
             .end((err, res) => {
-                console.log(err);
                 res.status.should.equal(400);
                 res.should.be.json;
                 res.body.status.should.equal(400);
