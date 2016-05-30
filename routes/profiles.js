@@ -316,6 +316,145 @@ router.post('/makematchprofile', (req, res, next) => {
       status: 401
     })
   }
-})
+});
+
+router.put('/follow', (req, res, next) => {
+  if (req.body.token) {
+    if (req.body.followEmail) {
+      if (emailValidator.validate(req.body.followEmail)) {
+        jwt.verify(req.body.token, secretKey, function(err, decoded) {
+          if (!err) {
+            if (decoded.isTeacher) {
+              let followOptions = {
+                method: 'PUT',
+                uri: profileService + "follow",
+                body: {
+                    email: decoded.email,
+                    follow: req.body.followEmail,
+                },
+                json: true // Automatically stringifies the body to JSON
+              };
+              rp(followOptions)
+              .then(parsedBody => {
+                res.status(parsedBody.status);
+                res.json(parsedBody);
+              })
+              .catch(errorBody => {
+                res.status(errorBody.statusCode);
+                res.json({
+                  status: errorBody.statusCode,
+                  message: errorBody.error.message,
+                });
+              })
+            } else {
+              res.status(403);
+              res.json({
+                message: 'Only other teachers may follow teachers',
+                status: 403,
+              })
+            }
+          } else {
+            res.status(401);
+            res.json({
+              message: 'Invalid token',
+              status: 401,
+            })
+          }
+        });
+      } else {
+        res.status(400);
+        res.json({
+          message: 'Invalid email, check the syntax and try again',
+          status: 400,
+        })
+        return;
+      }
+    } else {
+      res.status(400);
+      res.json({
+        message: 'Please provide the email of the user you want to follow',
+        status: 400,
+      })
+      return;
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: 'Please log in',
+      status: 401,
+    })
+    return;
+  }
+});
+router.put('/unfollow', (req, res, next) => {
+  if (req.body.token) {
+    if (req.body.unfollowEmail) {
+      if (emailValidator.validate(req.body.unfollowEmail)) {
+        jwt.verify(req.body.token, secretKey, function(err, decoded) {
+          if (!err) {
+            if (decoded.isTeacher) {
+              let followOptions = {
+                method: 'PUT',
+                uri: profileService + "unfollow",
+                body: {
+                    email: decoded.email,
+                    unfollow: req.body.unfollowEmail,
+                },
+                json: true // Automatically stringifies the body to JSON
+              };
+              rp(followOptions)
+              .then(parsedBody => {
+                res.status(parsedBody.status);
+                res.json(parsedBody);
+              })
+              .catch(errorBody => {
+                res.status(errorBody.statusCode);
+                res.json({
+                  status: errorBody.statusCode,
+                  message: errorBody.error.message,
+                });
+              })
+            } else {
+              res.status(403);
+              res.json({
+                message: 'Only other teachers may follow teachers',
+                status: 403,
+              })
+            }
+          } else {
+            res.status(401);
+            res.json({
+              message: 'Invalid token',
+              status: 401,
+            })
+          }
+        });
+      } else {
+        res.status(400);
+        res.json({
+          message: 'Invalid email, check the syntax and try again',
+          status: 400,
+        })
+        return;
+      }
+    } else {
+      res.status(400);
+      res.json({
+        message: 'Please provide the email of the user you want to unfollow',
+        status: 400,
+      })
+      return;
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: 'Please log in',
+      status: 401,
+    })
+    return;
+  }
+});
+
+
 
 module.exports = router;
