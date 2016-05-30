@@ -1,12 +1,7 @@
 'use strict'
 
-var returnedTeacherToken = 'eyJhbGciOiJIUzUxMiJ9.eyJpc1RlYWNoZXIiOnRy' +
-    'dWUsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSJ9.POqUvMScZPvEoYCPtMSUURUkPwswm' +
-    'cO75C6FAy9QkZHw9eYAU19ROzv_tjlggDjDA9YeVAgpKGjNpCMqkU1UHA';
-
-const returnedSchoolToken = 'eyJhbGciOiJIUzUxMiJ9.eyJpc1RlYWNoZXIiOmZhb' +
-    'HNlLCJlbWFpbCI6InRlc3RAdGVzdC5jb20ifQ.ILYZYC_GhG7T2eoMO0hPFh8R-dBY' +
-    'QyhT6J4wWPD1fW5QHnp6vdFeo8IPRVmWUR-iPmE-Tqa4FlpeNV1fQNylSw';
+var teacherToken;
+const returnedSchoolToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDQ4MDQ0NH0.mqRJ63CLMtHW2lVuwkI7_WrDdTrbzK3_BHR_5onhxj4';
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -48,7 +43,8 @@ before(function(done) {
                   avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
               })
               .end((err, res) => {
-                  done();
+                teacherToken = res.body.token;
+                done();
               })
           if(err) {
             return console.error('error running query', err);
@@ -76,7 +72,8 @@ describe('Logging in', () => {
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.status.should.equal(200);
-                res.body.token.should.equal(returnedTeacherToken);
+                // Token changes based on issue date.
+                // res.body.token.should.equal(teacherToken);
                 done();
             });
     });
@@ -89,10 +86,10 @@ describe('Logging in', () => {
                 password: '1Password!',
             })
             .end((err, res) => {
-                res.should.have.status(403);
+                res.should.have.status(401);
                 res.should.be.json;
                 res.body.should.be.a('object');
-                res.body.status.should.equal(403);
+                res.body.status.should.equal(401);
                 res.body.message.should.equal('Wrong email or password');
                 done();
             });
@@ -106,10 +103,10 @@ describe('Logging in', () => {
                 password: 'Password1!',
             })
             .end((err, res) => {
-                res.should.have.status(403);
+                res.should.have.status(401);
                 res.should.be.json;
                 res.body.should.be.a('object');
-                res.body.status.should.equal(403);
+                res.body.status.should.equal(401);
                 res.body.message.should.equal('Wrong email or password');
                 done();
             });
