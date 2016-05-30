@@ -1,13 +1,5 @@
 'use strict'
 
-const returnedTeacherToken = 'eyJhbGciOiJIUzUxMiJ9.eyJpc1RlYWNoZXIiOnRy' +
-    'dWUsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSJ9.POqUvMScZPvEoYCPtMSUURUkPwswm' +
-    'cO75C6FAy9QkZHw9eYAU19ROzv_tjlggDjDA9YeVAgpKGjNpCMqkU1UHA';
-
-const returnedSchoolToken = 'eyJhbGciOiJIUzUxMiJ9.eyJpc1RlYWNoZXIiOmZhb' +
-    'HNlLCJlbWFpbCI6InRlc3RAdGVzdC5jb20ifQ.ILYZYC_GhG7T2eoMO0hPFh8R-dBY' +
-    'QyhT6J4wWPD1fW5QHnp6vdFeo8IPRVmWUR-iPmE-Tqa4FlpeNV1fQNylSw';
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app');
@@ -70,7 +62,7 @@ describe('a user submits the sign up form', () => {
                 res.should.be.json;
                 res.body.status.should.equal(201);
                 res.body.message.should.equal('Account created for test@test.com');
-                res.body.token.should.equal(returnedTeacherToken);
+                res.body.token.should.be.a('String');
                 done();
             });
     });
@@ -92,7 +84,7 @@ describe('a user submits the sign up form', () => {
                 res.should.be.json;
                 res.body.status.should.equal(201);
                 res.body.message.should.equal('Account created for test@test.com');
-                res.body.token.should.equal(returnedSchoolToken);
+                res.body.token.should.be.a('String');
                 done();
             });
     });
@@ -133,7 +125,7 @@ describe('a user submits the sign up form', () => {
                 res.should.be.json;
                 res.body.status.should.equal(201);
                 res.body.message.should.equal('Account created for test@test.com');
-                res.body.token.should.equal(returnedTeacherToken);
+                res.body.token.should.be.a('String');
                 done();
             });
     });
@@ -152,7 +144,7 @@ describe('a user submits the sign up form', () => {
                 res.should.be.json;
                 res.body.status.should.equal(201);
                 res.body.message.should.equal('Account created for test@test.com');
-                res.body.token.should.equal(returnedSchoolToken);
+                res.body.token.should.be.a('String');
                 done();
             });
     });
@@ -205,7 +197,7 @@ describe('a user submits the sign up form', () => {
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.status.should.equal(400);
-                res.body.message.should.equal('Please enter enter an email');
+                res.body.message.should.equal('Please enter an email');
                 res.body.form.password.should.equal('1Password!');
                 res.body.form.displayName.should.equal('Testy');
                 res.body.form.isTeacher.should.equal(true);

@@ -221,6 +221,7 @@ router.post('/makematchprofile', (req, res, next) => {
               message: parsedBody.message,
               status: 200,
             })
+            return;
           })
           .catch(errorBody => {
             res.status(errorBody.statusCode);
@@ -230,7 +231,7 @@ router.post('/makematchprofile', (req, res, next) => {
             });
           })
         } else {
-          res.status(400);
+          res.status(401);
           res.json({
             message: 'Please completely fill out the profile',
             status: 400,
@@ -238,6 +239,7 @@ router.post('/makematchprofile', (req, res, next) => {
             invalid: invalid,
             malformed: malformed,
           })
+          return;
         }
       } else {
         res.status(401);
@@ -249,11 +251,12 @@ router.post('/makematchprofile', (req, res, next) => {
       }
     });
   } else {
-    res.status(403);
+    res.status(401);
     res.json({
       message: 'Please log in',
-      status: 403,
+      status: 401,
     })
+    return;
   }
 })
 

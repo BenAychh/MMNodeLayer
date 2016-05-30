@@ -138,11 +138,12 @@ before(function(done) {
               ageRangesWgt: 1
             })
             .end((err, res) => {
-              console.log(err);
-              res.status.should.equal(403);
+              console.log(res);
+              res.error.status.should.equal(401);
               res.body.should.be.json;
-              res.body.status.should.equal(403);
+              res.body.status.should.equal(401);
               res.body.message.should.equal('Please log in');
+              done();
             });
         });
 
@@ -173,6 +174,7 @@ before(function(done) {
               ageRangesWgt: 1
             })
             .end((err, res) => {
+              console.log(err);
               res.status.should.equal(400);
               res.body.should.be.json;
               res.body.status.should.equal(400);

@@ -1,7 +1,6 @@
 'use strict'
 
-const returnedTeacherToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJ0cnVlIiwiaWF0IjoxNDY0NDgwNDA5fQ.Yjr85nvvXfUZbUwIseoc4rRzKuaZqnpWd05KdKcwFjk';
-
+var teacherToken;
 const returnedSchoolToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDQ4MDQ0NH0.mqRJ63CLMtHW2lVuwkI7_WrDdTrbzK3_BHR_5onhxj4';
 
 const chai = require('chai');
@@ -44,7 +43,8 @@ before(function(done) {
                   avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
               })
               .end((err, res) => {
-                  done();
+                teacherToken = res.body.token;
+                done();
               })
           if(err) {
             return console.error('error running query', err);
@@ -72,7 +72,8 @@ describe('Logging in', () => {
                 res.should.be.json;
                 res.body.should.be.a('object');
                 res.body.status.should.equal(200);
-                res.body.token.should.equal(returnedTeacherToken);
+                // Token changes based on issue date.
+                // res.body.token.should.equal(teacherToken);
                 done();
             });
     });
@@ -85,10 +86,10 @@ describe('Logging in', () => {
                 password: '1Password!',
             })
             .end((err, res) => {
-                res.should.have.status(403);
+                res.should.have.status(401);
                 res.should.be.json;
                 res.body.should.be.a('object');
-                res.body.status.should.equal(403);
+                res.body.status.should.equal(401);
                 res.body.message.should.equal('Wrong email or password');
                 done();
             });
@@ -102,10 +103,10 @@ describe('Logging in', () => {
                 password: 'Password1!',
             })
             .end((err, res) => {
-                res.should.have.status(403);
+                res.should.have.status(401);
                 res.should.be.json;
                 res.body.should.be.a('object');
-                res.body.status.should.equal(403);
+                res.body.status.should.equal(401);
                 res.body.message.should.equal('Wrong email or password');
                 done();
             });
