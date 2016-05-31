@@ -235,6 +235,7 @@ router.post('/login', (req, res, next) => {
         message: 'Passwords must be at least 8 characters and contain at least one uppercase and lowecase letter, one number, and one special character.',
         form: req.body
       })
+      return;
     }
   } else {
     res.status(400);
@@ -252,8 +253,9 @@ router.post('/login', (req, res, next) => {
         email: req.body.email,
         password: req.body.password,
     },
-    json: true // Automatically stringifies the body to JSON
+    json: true,
   };
+  console.log(authOptions);
   rp(authOptions)
   .then(parsedBody => {
     res.status(200);
@@ -263,12 +265,14 @@ router.post('/login', (req, res, next) => {
     })
   })
   .catch(errorBody => {
+    console.log(errorBody);
     res.status(errorBody.statusCode);
     res.json({
       status: errorBody.statusCode,
       message: errorBody.error.message,
       form: req.body,
     });
+    return;
   })
 });
 router.post('/deactivate', (req, res, next) => {

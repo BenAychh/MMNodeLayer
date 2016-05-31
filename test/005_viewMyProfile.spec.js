@@ -15,50 +15,51 @@ var authhost = process.env.AUTHPG_PORT_5432_TCP_ADDR || 'localhost';
 var authport = process.env.AUTHPG_PORT_5432_TCP_PORT || 5432;
 var profilehost = process.env.PROFILEPG_PORT_5432_TCP_ADDR || 'localhost';
 var profileport = process.env.PROFILEPG_PORT_5432_TCP_PORT || 5432;
-before(function(done) {
-  let authConString = "postgres://" + authhost + ":" + authport + "/Users";
-  let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
-  pg.connect(authConString, (err, client, pgDone1) => {
-    if(err) {
-      return console.error('error fetching client from pool', err);
-    }
-    client.query('delete from users', (err, result) => {
-      pgDone1();
-      pg.connect(profileConString, (err, client, pgDone2) => {
-        if(err) {
-          return console.error('error fetching client from pool', err);
-        }
-        client.query('delete from profiles', (err, result) => {
-          pgDone2();
-          chai.request(server)
-              .post('/auth/signup')
-              .send({
-                  email: 'test@test.com',
-                  isTeacher: true,
-                  password: '1Password!',
-                  displayName: 'Testy',
-                  lastName: 'Mctestface',
-                  description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
-                  state: 'CO',
-                  avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
-              })
-              .end((err, res) => {
-                  teacherToken = res.body.token;
-                  done();
-              });
-          if(err) {
-            return console.error('error running query', err);
-          }
-        });
-      });
-      if(err) {
-        return console.error('error running query', err);
-      }
-    });
-  });
-})
 
 describe('get user profile', () => {
+
+  before(function(done) {
+    let authConString = "postgres://" + authhost + ":" + authport + "/Users";
+    let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
+    pg.connect(authConString, (err, client, pgDone1) => {
+      if(err) {
+        return console.error('error fetching client from pool', err);
+      }
+      client.query('delete from users', (err, result) => {
+        pgDone1();
+        pg.connect(profileConString, (err, client, pgDone2) => {
+          if(err) {
+            return console.error('error fetching client from pool', err);
+          }
+          client.query('delete from profiles', (err, result) => {
+            pgDone2();
+            chai.request(server)
+                .post('/auth/signup')
+                .send({
+                    email: 'test@test.com',
+                    isTeacher: true,
+                    password: '1Password!',
+                    displayName: 'Testy',
+                    lastName: 'Mctestface',
+                    description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
+                    state: 'CO',
+                    avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
+                })
+                .end((err, res) => {
+                    teacherToken = res.body.token;
+                    done();
+                });
+            if(err) {
+              return console.error('error running query', err);
+            }
+          });
+        });
+        if(err) {
+          return console.error('error running query', err);
+        }
+      });
+    });
+  })
 
     it('should get user profile information with valid email', done => {
         chai.request(server)

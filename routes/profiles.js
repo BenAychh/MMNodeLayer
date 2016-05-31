@@ -5,6 +5,7 @@ var rp = require('request-promise');
 var emailValidator = require('email-validator');
 var validUrl = require('valid-url');
 var jwt = require('jsonwebtoken');
+var algorithm = require('../algorithm/algorithm.js');
 
 var authService = 'http://localhost:8000/';
 var profileService = 'http://localhost:8001/';
@@ -271,51 +272,6 @@ router.post('/makematchprofile', (req, res, next) => {
     })
     return;
   }
-})
-.get('/get', (req, res, next) => {
-  if (req.query.token) {
-    jwt.verify(req.query.token, secretKey, function(err, decoded) {
-      if (!err) {
-        let updateOptions = {
-          method: 'post',
-          uri: profileService + "get",
-          body: {
-            email: decoded.email,
-          },
-          json: true // Automatically stringifies the body to JSON
-        };
-        rp(updateOptions)
-        .then(parsedBody => {
-          res.status(200);
-          res.json({
-            message: 'Returning profile',
-            profile: parsedBody.profile,
-            status: 200,
-          })
-          return;
-        })
-        .catch(errorBody => {
-          res.status(errorBody.statusCode);
-          res.json({
-            message: errorBody.error.message,
-            status: errorBody.statusCode,
-          });
-        })
-      } else {
-        res.status(401);
-        res.json({
-          message: 'Bad token',
-          status: 401,
-        })
-      }
-    });
-  } else {
-    res.status(401);
-    res.json({
-      message: 'Please log in',
-      status: 401
-    })
-  }
 });
 
 router.put('/follow', (req, res, next) => {
@@ -454,6 +410,91 @@ router.put('/unfollow', (req, res, next) => {
     return;
   }
 });
+router.get('/get', (req, res, next) => {
+  if(req.query.token) {
+    if (req.query.profile) {
+      jwt.verify(req.query.token, secretKey, function(err, decoded) {
+        if(!err) {
+          let promises = [];
+          let getProfile = {
+            method: 'GET',
+            url: profileService + 'get?profile=' + req.query.profile,
+            json: true // Automatically stringifies the body to JSON
+          }
+          promises.push(rp(getProfile));
+          let checkMatch = {
+            method: 'GET',
+            uri: matchService + "ismatch?email=" + decoded.email + "&match=" + req.query.profile,
+            json: true // Automatically stringifies the body to JSON
+          };
+          promises.push(rp(checkMatch));
+          let getTeacherMatchProfile = {
+            method: 'GET',
+            uri: matchService + "matchprofile?email=" + decoded.email,
+            json: true // Automatically stringifies the body to JSON
+          };
+          promises.push(rp(getTeacherMatchProfile));
+          let getProfileMatchProfile = {
+            method: 'GET',
+            uri: matchService + "matchprofile?email=" +  req.query.profile,
+            json: true // Automatically stringifies the body to JSON
+          };
+          promises.push(rp(getProfileMatchProfile));
+          let getProfileIsTeacher = {
+            method: 'GET',
+            uri: authService + "isteacher?email=" +  req.query.profile,
+            json: true // Automatically stringifies the body to JSON
+          };
+          promises.push(rp(getProfileIsTeacher));
+          Promise.all(promises)
+          .then(results => {
+            if (!results[1].match) {
+              delete results[0].profile.email;
+              delete results[0].profile.displayName;
+            }
+            delete results[0].profile.password;
+            delete results[0].profile.lastName;
+            delete results[0].profile.followedAndStaff;
+            if (results[2].profile && results[3].profile)
+            {
+              results[0].profile.matchPercent = Number(algorithm(JSON.parse(results[2].profile), JSON.parse(results[3].profile)));
+            }
+            results[0].profile.isTeacher = results[4].isTeacher;
+            res.status(200);
+            res.json({
+              message: "Here is the profile for " + req.query.profile,
+              profile: results[0].profile,
+              status: 200,
+            })
+          })
+          .catch(errorBody => {
+            res.send('error! ' + errorBody)
+          })
+        } else {
+          res.status(401);
+          res.json({
+            message: 'Invalid token',
+            status: 401,
+          })
+        }
+      });
+    } else {
+      res.status(400);
+      res.json({
+        message: 'Profile does not exist in database',
+        status: 400,
+      })
+      return;
+    }
+  } else {
+    res.status(401);
+    res.json({
+      message: 'Please log in',
+      status: 401,
+    })
+    return;
+  }
+})
 
 
 

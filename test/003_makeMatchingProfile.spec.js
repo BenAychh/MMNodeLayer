@@ -18,72 +18,70 @@ var profileport = process.env.PROFILEPG_PORT_5432_TCP_PORT || 5432;
 var matchMongoHost = process.env.MD_PORT_5432_TCP_ADDR || 'localhost';
 var matchMongoPort = process.env.MD_PORT_5432_TCP_PORT || 27017;
 
-before(function(done) {
-    let authConString = "postgres://" + authhost + ":" + authport + "/Users";
-    let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
-    let mongoUrl = 'mongodb://' + matchMongoHost + ":" + matchMongoPort + "/potentialMatches"
-    pg.connect(authConString, (err, client, pgDone1) => {
-        if (err) {
-            return console.error('error fetching client from pool', err);
-        }
-        client.query('delete from users', (err, result) => {
-            if (err) {
-                return console.error('error running query', err);
-            }
-            pgDone1();
-            pg.connect(profileConString, (err, client, pgDone2) => {
-                if (err) {
-                    return console.error('error fetching client from pool', err);
-                }
-                client.query('delete from profiles', (err, result) => {
-                    pgDone2();
-                    MongoClient.connect(mongoUrl, (err, db) => {
-                        if (!err) {
-                            db.collection('potentialMatches').remove({});
-                            chai.request(server)
-                                .post('/auth/signup')
-                                .send({
-                                    email: 'teacher@test.com',
-                                    isTeacher: true,
-                                    password: '1Password!',
-                                    displayName: 'Testy',
-                                    lastName: 'Mctestface',
-                                    description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
-                                    state: 'CO',
-                                    avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
-                                })
-                                .end((err, res) => {
-                                    if (res.status == 201) {
-                                        teacherToken = res.body.token;
-                                        chai.request(server)
-                                            .post('/auth/signup')
-                                            .send({
-                                                email: 'school@test.com',
-                                                isTeacher: false,
-                                                password: '1Password!',
-                                                displayName: 'Testy',
-                                                description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
-                                                state: 'CO',
-                                                avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
-                                            })
-                                            .end((err, res) => {
-                                                schoolToken = res.body.token;
-                                                done();
-                                            });
-                                    } else {
-                                        // console.log(res.body);
-                                    }
-                                });
-                        }
-                    });
-                });
-            });
-        });
-    });
-});
-
-
 describe('a user submits their matching profile for the first time', () => {
+  beforeEach(function(done) {
+      let authConString = "postgres://" + authhost + ":" + authport + "/Users";
+      let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
+      let mongoUrl = 'mongodb://' + matchMongoHost + ":" + matchMongoPort + "/potentialMatches"
+      pg.connect(authConString, (err, client, pgDone1) => {
+          if (err) {
+              return console.error('error fetching client from pool', err);
+          }
+          client.query('delete from users', (err, result) => {
+              if (err) {
+                  return console.error('error running query', err);
+              }
+              pgDone1();
+              pg.connect(profileConString, (err, client, pgDone2) => {
+                  if (err) {
+                      return console.error('error fetching client from pool', err);
+                  }
+                  client.query('delete from profiles', (err, result) => {
+                      pgDone2();
+                      MongoClient.connect(mongoUrl, (err, db) => {
+                          if (!err) {
+                              db.collection('potentialMatches').remove({});
+                              chai.request(server)
+                                  .post('/auth/signup')
+                                  .send({
+                                      email: 'teacher@test.com',
+                                      isTeacher: true,
+                                      password: '1Password!',
+                                      displayName: 'Testy',
+                                      lastName: 'Mctestface',
+                                      description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
+                                      state: 'CO',
+                                      avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
+                                  })
+                                  .end((err, res) => {
+                                      if (res.status == 201) {
+                                          teacherToken = res.body.token;
+                                          chai.request(server)
+                                              .post('/auth/signup')
+                                              .send({
+                                                  email: 'school@test.com',
+                                                  isTeacher: false,
+                                                  password: '1Password!',
+                                                  displayName: 'Testy',
+                                                  description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
+                                                  state: 'CO',
+                                                  avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
+                                              })
+                                              .end((err, res) => {
+                                                  schoolToken = res.body.token;
+                                                  done();
+                                              });
+                                      } else {
+                                          // console.log(res.body);
+                                      }
+                                  });
+                          }
+                      });
+                  });
+              });
+          });
+      });
+  });
 
     it('should create a matching profile with a complete submission', done => {
         chai.request(server)

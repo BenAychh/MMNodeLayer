@@ -18,61 +18,62 @@ let profileport = process.env.PROFILEPG_PORT_5432_TCP_PORT || 5432;
 let interesthost = process.env.INTERESTPG_PORT_5432_TCP_ADDR || 'localhost';
 let interestport = process.env.INTERESTPG_PORT_5432_TCP_PORT || 5432;
 
-beforeEach(function(done) {
-  let authConString = "postgres://" + authhost + ":" + authport + "/Users";
-  let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
-  let interestedConString = "postgres://" + interesthost + ":" + interestport + "/Interested";
-  pg.connect(authConString, (err, client, pgDone1) => {
-    client.query('delete from users', (err, result) => {
-      if (err) {
-        console.log(err);
-      }
-      pgDone1();
-      pg.connect(profileConString, (err, client, pgDone2) => {
-        client.query('delete from profiles', (err, result) => {
-          pgDone2();
-          pg.connect(interestedConString, (err, client, pgDone3) => {
-            client.query('delete from interested', (err, result) => {
-              pgDone3();
-              chai.request(server)
-                .post('/auth/signup')
-                .send({
-                  email: 'teacher@test.com',
-                  isTeacher: true,
-                  password: '1Password!',
-                  displayName: 'Testy',
-                  lastName: 'Mctestface',
-                  description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
-                  state: 'CO',
-                  avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
-                })
-                .end((err, res) => {
-                  teacherToken = res.body.token;
-                  chai.request(server)
-                    .post('/auth/signup')
-                    .send({
-                      email: 'school@test.com',
-                      isTeacher: false,
-                      password: '1Password!',
-                      displayName: 'Testy',
-                      description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
-                      state: 'CO',
-                      avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
-                    })
-                    .end((err, res) => {
-                      schoolToken = res.body.token;
-                      done();
-                    });
-                });
+
+describe('a user shows interest in another user of a different type', () => {
+
+  beforeEach(function(done) {
+    let authConString = "postgres://" + authhost + ":" + authport + "/Users";
+    let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
+    let interestedConString = "postgres://" + interesthost + ":" + interestport + "/Interested";
+    pg.connect(authConString, (err, client, pgDone1) => {
+      client.query('delete from users', (err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        pgDone1();
+        pg.connect(profileConString, (err, client, pgDone2) => {
+          client.query('delete from profiles', (err, result) => {
+            pgDone2();
+            pg.connect(interestedConString, (err, client, pgDone3) => {
+              client.query('delete from interested', (err, result) => {
+                pgDone3();
+                chai.request(server)
+                  .post('/auth/signup')
+                  .send({
+                    email: 'teacher@test.com',
+                    isTeacher: true,
+                    password: '1Password!',
+                    displayName: 'Testy',
+                    lastName: 'Mctestface',
+                    description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
+                    state: 'CO',
+                    avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
+                  })
+                  .end((err, res) => {
+                    teacherToken = res.body.token;
+                    chai.request(server)
+                      .post('/auth/signup')
+                      .send({
+                        email: 'school@test.com',
+                        isTeacher: false,
+                        password: '1Password!',
+                        displayName: 'Testy',
+                        description: 'Quis aute iure reprehenderit in voluptate velit esse. Mercedem aut nummos unde unde extricat, amaras. Morbi odio eros, volutpat ut pharetra vitae, lobortis sed nibh. Ab illo tempore, ab est sed immemorabili. Gallia est omnis divisa in partes tres, quarum.',
+                        state: 'CO',
+                        avatarUrl: 'http://s3.aws.com/someimage0908234.jpg'
+                      })
+                      .end((err, res) => {
+                        schoolToken = res.body.token;
+                        done();
+                      });
+                  });
+              })
             })
-          })
+          });
         });
       });
     });
   });
-});
-
-describe('a user shows interest in another user of a different type', () => {
 
   it('should add a school to a teacher\'s interested array when the teacher makes request', done => {
     chai.request(server)
