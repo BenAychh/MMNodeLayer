@@ -410,6 +410,49 @@ router.put('/unfollow', (req, res, next) => {
     return;
   }
 });
+router.get('/getmyprofile', (req, res, next) => {
+  if (req.query.token) {
+    jwt.verify(req.query.token, secretKey, function(err, decoded) {
+      if (!err) {
+        let updateOptions = {
+          method: 'GET',
+          uri: profileService + "get?profile=" + decoded.email,
+          json: true,
+        };
+        rp(updateOptions)
+        .then(parsedBody => {
+          console.log(parsedBody);
+          res.status(200);
+          res.json({
+            message: 'Returning profile',
+            profile: parsedBody.profile,
+            status: 200,
+          })
+          return;
+        })
+        .catch(errorBody => {
+          res.status(errorBody.statusCode);
+          res.json({
+            message: errorBody.error.message,
+            status: errorBody.statusCode,
+          });
+        })
+      } else {
+        res.status(401);
+        res.json({
+          message: 'Bad token',
+          status: 401,
+        })
+      }
+    });
+  } else {
+    res.status(401);
+    res.json({
+      message: 'Please log in',
+      status: 401
+    })
+  }
+})
 router.get('/get', (req, res, next) => {
   if(req.query.token) {
     if (req.query.profile) {
