@@ -18,7 +18,7 @@ describe('get user profile', () => {
 
   let teacherToken;
 
-  before(function(done) {
+  beforeEach(function(done) {
     let authConString = "postgres://" + authhost + ":" + authport + "/Users";
     let profileConString = "postgres://" + profilehost + ":" + profileport + "/Profiles";
     pg.connect(authConString, (err, client, pgDone1) => {

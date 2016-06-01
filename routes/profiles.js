@@ -11,6 +11,10 @@ var authService = 'http://localhost:8000/';
 var profileService = 'http://localhost:8001/';
 var matchService = 'http://localhost:8002/';
 
+var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+var S3_BUCKET = process.env.S3_BUCKET;
+
 var secretKey = process.env.secretKey;
 if (!secretKey) {
   secretKey = 'shhhhh';
@@ -538,6 +542,31 @@ router.get('/get', (req, res, next) => {
     return;
   }
 })
+router.get('/signS3', (req, res) => {
+  aws.config.update({ accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY });
+  var s3 = new aws.S3();
+  var fileName = new Date().getTime()
+    + req.query.fileName.substring(req.query.fileName.lastIndexOf('.'));
+  var s3Params = {
+    Bucket: S3_BUCKET,
+    Key: fileName,
+    Expires: 60,
+    ContentType: req.query.fileType,
+    ACL: 'public-read',
+  };
+  s3.getSignedUrl('putObject', s3Params, (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+
+      var returnData = {
+        signedRequest: data,
+        url: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + fileName,
+      };
+      res.json(returnData);
+    }
+  });
+});
 
 
 

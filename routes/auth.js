@@ -467,7 +467,7 @@ function validatePassword(password) {
   capital = password.search(/[A-Z]/g) != -1;
   lower = password.search(/[a-z]/g) != -1;
   number = password.search(/[0-9]/g) != -1;
-  symbol = password.search(/[^a-zA-Z0-9]/g != -1);
+  symbol = password.search(/[^a-zA-Z0-9]/g) != -1;
   return capital && lower && number && symbol;
 }
 
