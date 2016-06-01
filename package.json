@@ -7,6 +7,7 @@
     "test": "mocha"
   },
   "dependencies": {
+    "aws-sdk": "^2.3.16",
     "body-parser": "~1.13.2",
     "chai": "^3.5.0",
     "chai-http": "^2.0.1",
