@@ -506,8 +506,8 @@ router.get('/get', (req, res, next) => {
             if (results[2].profile && results[3].profile)
             {
               results[0].profile.matchPercent = Number(algorithm(JSON.parse(results[2].profile), JSON.parse(results[3].profile)));
-              results[0].profile.myProfile = JSON.parse(results[2].profile);
-              results[0].profile.theirProfile = JSON.parse(results[3].profile);
+              results[0].myMatchProfile = JSON.parse(results[2].profile);
+              results[0].theirMatchProfile = JSON.parse(results[3].profile);
             }
             results[0].profile.isTeacher = results[4].isTeacher;
             res.status(200);
