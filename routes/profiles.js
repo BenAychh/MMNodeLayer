@@ -514,6 +514,8 @@ router.get('/get', (req, res, next) => {
             res.json({
               message: "Here is the profile for " + req.query.profile,
               profile: results[0].profile,
+              myMatchProfile: results[0].myMatchProfile,
+              theirMatchProfile: results[0].theirMatchProfile,
               status: 200,
             })
           })
