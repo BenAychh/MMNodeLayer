@@ -508,6 +508,9 @@ router.get('/get', (req, res, next) => {
               results[0].profile.matchPercent = Number(algorithm(JSON.parse(results[2].profile), JSON.parse(results[3].profile)));
               results[0].myMatchProfile = JSON.parse(results[2].profile);
               results[0].theirMatchProfile = JSON.parse(results[3].profile);
+              delete results[0].theirMatchProfile._id;
+              delete results[0].theirMatchProfile.email;
+              delete results[0].theirMatchProfile.matchSuggestions;
             }
             results[0].profile.isTeacher = results[4].isTeacher;
             res.status(200);
