@@ -12,7 +12,7 @@ var profileService = 'http://localhost:8001/';
 var matchService = 'http://localhost:8002/';
 
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY || 'AKIAJCKL57PAMZB54LAQ';
-var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY || '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'; 
+var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY || 'SvTsYDFqy7CymY+vJLQ892oX8Uvl4IvC+/TYf9aC';
 var S3_BUCKET = process.env.S3_BUCKET || 'mmprofilesimages';
 
 var secretKey = process.env.secretKey;
@@ -506,8 +506,8 @@ router.get('/get', (req, res, next) => {
             if (results[2].profile && results[3].profile)
             {
               results[0].profile.matchPercent = Number(algorithm(JSON.parse(results[2].profile), JSON.parse(results[3].profile)));
-              results[0].profile.myProfile = JSON.parse(results[2]);
-              results[0].profile.theirProfile = JSON.parse(results[3]);
+              results[0].profile.myProfile = JSON.parse(results[2].profile);
+              results[0].profile.theirProfile = JSON.parse(results[3].profile);
             }
             results[0].profile.isTeacher = results[4].isTeacher;
             res.status(200);
