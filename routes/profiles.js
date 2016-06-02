@@ -35,6 +35,15 @@ router.put('/update', (req, res, next) => {
           })
           return;
         }
+        if (!req.body.displayName) {
+          res.status(400);
+          res.json({
+            status: 400,
+            message: 'Please provide a display name that is text less than 50 characters',
+            form: req.body,
+          })
+          return;
+        }
         if (req.body.displayName.length > 50) {
           res.status(400);
           res.json({
