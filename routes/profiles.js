@@ -6,14 +6,14 @@ var emailValidator = require('email-validator');
 var validUrl = require('valid-url');
 var jwt = require('jsonwebtoken');
 var algorithm = require('../algorithm/algorithm.js');
-
+var aws = require('aws-sdk');
 var authService = 'http://localhost:8000/';
 var profileService = 'http://localhost:8001/';
 var matchService = 'http://localhost:8002/';
 
-var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
-var S3_BUCKET = process.env.S3_BUCKET;
+var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY || 'AKIAJCKL57PAMZB54LAQ';
+var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY || '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'; 
+var S3_BUCKET = process.env.S3_BUCKET || 'mmprofilesimages';
 
 var secretKey = process.env.secretKey;
 if (!secretKey) {
@@ -153,6 +153,7 @@ router.put('/update', (req, res, next) => {
   }
 });
 router.post('/makematchprofile', (req, res, next) => {
+  console.log(req.body);
   if (req.body.token){
     jwt.verify(req.body.token, secretKey, function(err, decoded) {
       if (!err) {
@@ -543,6 +544,7 @@ router.get('/get', (req, res, next) => {
   }
 })
 router.get('/signS3', (req, res) => {
+  console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
   aws.config.update({ accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY });
   var s3 = new aws.S3();
   var fileName = new Date().getTime()
@@ -558,7 +560,7 @@ router.get('/signS3', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-
+      console.log(data);
       var returnData = {
         signedRequest: data,
         url: 'https://' + S3_BUCKET + '.s3.amazonaws.com/' + fileName,
