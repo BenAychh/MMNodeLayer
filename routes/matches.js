@@ -21,11 +21,12 @@ router.get('/suggested', (req, res, next) => {
         };
         rp(updateOptions)
         .then(parsedBody => {
-          console.log(parsedBody);
+          let jsonBody = JSON.parse(parsedBody);
+          console.log(jsonBody);
           res.status(200);
           res.json({
             message: 'Returning suggested matches',
-            suggestedMatches: parsedBody.suggestedMatches || [],
+            suggestedMatches: jsonBody['match suggestions'] || [],
             status: 200,
           })
         })
