@@ -247,9 +247,9 @@ router.get('/getmatches', (req, res, next) => {
           var profilesCSV = "";
           JSON.parse(parsedBody).matches.forEach(match => {
             profilesCSV += match + ",";
-          }),
+          });
           let profileOptions = {
-            method: 'GET'
+            method: 'GET',
             uri: profileService + "/getmultiple?profiles=" + profilesCSV;
           }
           return rp(profileOptions)
