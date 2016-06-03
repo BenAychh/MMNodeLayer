@@ -35,9 +35,11 @@ router.get('/suggested', (req, res, next) => {
           .then(parsedBody2 => {
             var matchesProfiles = JSON.parse(parsedBody2).profile;
             matchesProfiles.forEach(profile => {
+console.log(profile);
               matches.forEach(match => {
+console.log(match);
                 if (match.email === profile.email) {
-                  profile.matchPercent = match.matchPercent;
+                  profile.perc = match.perc;
                   return;
                 }
               })

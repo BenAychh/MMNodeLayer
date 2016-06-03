@@ -1,5 +1,4 @@
 node_modules
-<<<<<<< HEAD
-=======
 .vscode/
->>>>>>> develop
+log
+pid
