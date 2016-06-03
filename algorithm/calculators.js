@@ -4,7 +4,11 @@ module.exports = {
     someMatch: function(memOneArr, memTwoArr) {
         var someMatch = memTwoArr.some(elOne => {
             for (i = 0; i < memOneArr.length; i++) {
-                return elOne === memOneArr[i];
+                if (elOne === memOneArr[i]) {
+                    return elOne === memOneArr[i];
+                } else {
+                    continue;
+                }
             }
         });
         return someMatch;

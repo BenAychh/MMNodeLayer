@@ -12,33 +12,44 @@ const calc = require('./calculators');
 
 function match(memberOne, memberTwo) {
 
+    let memOne;
+    let memTwo;
+    if (memberOne.isTeacher === true) {
+        memOne = memberOne;
+        memTwo = memberTwo;
+    } else if (memberOne.isTeacher === false) {
+        memOne = memberTwo;
+        memTwo = memberOne;
+    }
+
     // establish all match percentages for individual elements
     // if a non-negotiable element is -1, stop the loop and return a non-match
-    let ageMatch = matchAge(memberTwo.ageRanges, memberOne.ageRanges);
+    let ageMatch = matchAge(memTwo.ageRanges, memOne.ageRanges);
     if (ageMatch === (-1)) {
         return 0;
     }
 
-    let stateMatch = matchState(memberTwo.states, memberOne.states);
+    let stateMatch = matchState(memTwo.states, memOne.states);
     if (stateMatch === (-1)) {
         return 0;
     }
 
-    let trainingMatch = matchTraining(memberTwo.training, memberOne.training);
+    let trainingMatch = matchTraining(memOne.training, memTwo.training);
     if (trainingMatch === (-1)) {
         return 0;
     }
 
-    let calMatch = matchCal(memberOne.cals, memberTwo.cals);
-    let locMatch = matchLoc(memberOne.locTypes, memberTwo.locTypes);
-    let orgMatch = matchOrg(memberOne.orgTypes, memberTwo.orgTypes);
-    let sizeMatch = matchSize(memberOne.sizes, memberTwo.sizes);
-    let traitMatch = matchTraits(memberOne.traits, memberTwo.traits);
+    let traitMatch = matchTraits(memOne.traits, memTwo.traits);
+    let calMatch = matchCal(memTwo.cals, memOne.cals);
+    let locMatch = matchLoc(memTwo.locTypes, memOne.locTypes);
+    let orgMatch = matchOrg(memTwo.orgTypes, memOne.orgTypes);
+    let sizeMatch = matchSize(memTwo.sizes, memOne.sizes);
 
-    let matchPercentMemberOne = calc.matchPercentOneWay(ageMatch, memberOne.ageRangesWgt, calMatch, memberOne.calsWgt, locMatch, memberOne.locTypesWgt, orgMatch, memberOne.orgTypesWgt, sizeMatch, memberOne.sizesWgt, stateMatch, memberOne.statesWgt, trainingMatch, memberOne.trainingWgt, traitMatch, memberOne.traitsWgt);
-    let matchPercentMemberTwo = calc.matchPercentOneWay(ageMatch, memberTwo.ageRangesWgt, calMatch, memberTwo.calsWgt, locMatch, memberTwo.locTypesWgt, orgMatch, memberTwo.orgTypesWgt, sizeMatch, memberTwo.sizesWgt, stateMatch, memberTwo.statesWgt, trainingMatch, memberTwo.trainingWgt, traitMatch, memberTwo.traitsWgt);
+    let matchPercentMemOne = calc.matchPercentOneWay(ageMatch, memOne.ageRangesWgt, calMatch, memOne.calsWgt, locMatch, memOne.locTypesWgt, orgMatch, memOne.orgTypesWgt, sizeMatch, memOne.sizesWgt, stateMatch, memOne.statesWgt, trainingMatch, memOne.trainingWgt, traitMatch, memOne.traitsWgt);
 
-    let matchPercent = calc.matchPercentMutual(matchPercentMemberOne, matchPercentMemberTwo).toFixed(2);
+    let matchPercentMemTwo = calc.matchPercentOneWay(ageMatch, memTwo.ageRangesWgt, calMatch, memTwo.calsWgt, locMatch, memTwo.locTypesWgt, orgMatch, memTwo.orgTypesWgt, sizeMatch, memTwo.sizesWgt, stateMatch, memTwo.statesWgt, trainingMatch, memTwo.trainingWgt, traitMatch, memTwo.traitsWgt);
+
+    let matchPercent = calc.matchPercentMutual(matchPercentMemOne, matchPercentMemTwo).toFixed(2);
 
     return matchPercent;
 }

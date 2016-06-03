@@ -1,10 +1,10 @@
 var calc = require('../calculators');
 
-module.exports = function (schTraits, teaTraits) {
-  if (calc.someMatch(schTraits, teaTraits) === true) {
-    var count = calc.countNumOfMatches(schTraits, teaTraits);
-    return calc.findDecimal(count, schTraits.length);
-  } else {
-    return (0);
-  }
+module.exports = function(memOneTraits, memTwoTraits) {
+    if (calc.someMatch(memOneTraits, memTwoTraits) === true) {
+        var count = calc.countNumOfMatches(memOneTraits, memTwoTraits);
+        return calc.findDecimal(count, memOneTraits.length);
+    } else {
+        return (0);
+    }
 };
