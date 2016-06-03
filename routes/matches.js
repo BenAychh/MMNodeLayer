@@ -23,20 +23,28 @@ router.get('/suggested', (req, res, next) => {
         rp(updateOptions)
         .then(parsedBody => {
           var profilesCSV = "";
-          JSON.parse(parsedBody)['match suggestions'].forEach(match => {
-console.log(match);
-            profilesCSV += match + ",";
+          var matches = JSON.parse(parsedBody)['match suggestions']
+          matches.forEach(match => {
+            profilesCSV += match.email + ",";
           });
           let profileOptions = {
             method: 'GET',
             uri: profileService + "getmultiple?profiles=" + profilesCSV,
           };
-console.log(profileOptions);
           return rp(profileOptions)
-          .then(parsedBody => {
+          .then(parsedBody2 => {
+            var matchesProfiles = JSON.parse(parsedBody2).profile;
+            matchesProfiles.forEach(profile => {
+              matches.forEach(match => {
+                if (match.email === profile.email) {
+                  profile.matchPercent = match.matchPercent;
+                  return;
+                }
+              })
+            })
             res.status(200);
             res.json({
-              suggestedMatches: JSON.parse(parsedBody).profile,
+              suggestedMatches: matchesProfiles,
               message: 'Returning suggestedMatches',
               status: 200,
             })
