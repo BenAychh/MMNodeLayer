@@ -38,7 +38,6 @@ router.get('/suggested', (req, res, next) => {
           });
           return;
         })
-
       } else {
         console.log(decoded);
         res.status(401);
