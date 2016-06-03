@@ -486,24 +486,6 @@ router.get('/get', (req, res, next) => {
                         json: true // Automatically stringifies the body to JSON
                     };
                     promises.push(rp(checkMatch));
-                    let getTeacherMatchProfile = {
-                        method: 'GET',
-                        uri: matchService + "matchprofile?email=" + decoded.email,
-                        json: true // Automatically stringifies the body to JSON
-                    };
-                    promises.push(rp(getTeacherMatchProfile));
-                    let getProfileMatchProfile = {
-                        method: 'GET',
-                        uri: matchService + "matchprofile?email=" + req.query.profile,
-                        json: true // Automatically stringifies the body to JSON
-                    };
-                    promises.push(rp(getProfileMatchProfile));
-                    let getProfileIsTeacher = {
-                        method: 'GET',
-                        uri: authService + "isteacher?email=" + req.query.profile,
-                        json: true // Automatically stringifies the body to JSON
-                    };
-                    promises.push(rp(getProfileIsTeacher));
                     Promise.all(promises)
                         .then(results => {
                             if (!results[1].match) {
@@ -513,21 +495,14 @@ router.get('/get', (req, res, next) => {
                             delete results[0].profile.password;
                             delete results[0].profile.lastName;
                             delete results[0].profile.followedAndStaff;
-                            if (results[2].profile && results[3].profile) {
-                                results[0].profile.matchPercent = Number(algorithm(JSON.parse(results[2].profile), JSON.parse(results[3].profile)));
-                                results[0].myMatchProfile = JSON.parse(results[2].profile);
-                                results[0].theirMatchProfile = JSON.parse(results[3].profile);
-                                delete results[0].theirMatchProfile._id;
-                                delete results[0].theirMatchProfile.email;
-                                delete results[0].theirMatchProfile.matchSuggestions;
-                            }
-                            results[0].profile.isTeacher = results[4].isTeacher;
+                            var aMatch = JSON.parse(results[1].profile).matchSuggestions.filter(match => {
+                              return match.email === decoded.email;
+                            })[0].perc || 0;
+                            results[0].profile.isTeacher = results[1].isTeacher;
                             res.status(200);
                             res.json({
                                 message: "Here is the profile for " + req.query.profile,
                                 profile: results[0].profile,
-                                myMatchProfile: results[0].myMatchProfile,
-                                theirMatchProfile: results[0].theirMatchProfile,
                                 status: 200,
                             })
                         })
