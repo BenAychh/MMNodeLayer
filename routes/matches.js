@@ -4,6 +4,7 @@ var router = express.Router();
 var jwt = require('jsonwebtoken');
 var rp = require('request-promise');
 var matchService = 'http://localhost:8002/';
+var profileService = 'http://localhost:8001/';
 var emailValidator = require('email-validator');
 
 var secretKey = process.env.secretKey;
@@ -243,12 +244,24 @@ router.get('/getmatches', (req, res, next) => {
         };
         rp(interestedOptions)
         .then(parsedBody => {
-          res.status(200);
-          res.json({
-            list: JSON.parse(parsedBody).matches,
-            message: 'Here are your matches',
-            status: 200,
+          var profilesCSV = "";
+          JSON.parse(parsedBody).matches.forEach(match => {
+            profilesCSV += match + ",";
+          }),
+          let profileOptions = {
+            method: 'GET'
+            uri: profileService + "/getmultiple?profiles=" + profilesCSV;
+          }
+          return rp(profileOptions)
+          .then(parsedBody => {
+            res.status(200);
+            res.json({
+              list: JSON.parse(parsedBody).profile;
+              message: 'Here are your matches',
+              status: 200,
+            })
           })
+
         })
         .catch(errorBody => {
           console.log(errorBody);
