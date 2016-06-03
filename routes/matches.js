@@ -23,18 +23,20 @@ router.get('/suggested', (req, res, next) => {
         rp(updateOptions)
         .then(parsedBody => {
           var profilesCSV = "";
-          JSON.parse(parsedBody).matches.forEach(match => {
+          JSON.parse(parsedBody)['match suggestions'].forEach(match => {
+console.log(match);
             profilesCSV += match + ",";
           });
           let profileOptions = {
             method: 'GET',
-            uri: profileService + "/getmultiple?profiles=" + profilesCSV;
-          }
+            uri: profileService + "getmultiple?profiles=" + profilesCSV,
+          };
+console.log(profileOptions);
           return rp(profileOptions)
           .then(parsedBody => {
             res.status(200);
             res.json({
-              suggestedMatches: JSON.parse(parsedBody).profile;
+              suggestedMatches: JSON.parse(parsedBody).profile,
               message: 'Returning suggestedMatches',
               status: 200,
             })
@@ -258,13 +260,13 @@ router.get('/getmatches', (req, res, next) => {
           });
           let profileOptions = {
             method: 'GET',
-            uri: profileService + "/getmultiple?profiles=" + profilesCSV;
+            uri: profileService + "/getmultiple?profiles=" + profilesCSV,
           }
           return rp(profileOptions)
           .then(parsedBody => {
             res.status(200);
             res.json({
-              list: JSON.parse(parsedBody).profile;
+              list: JSON.parse(parsedBody).profile,
               message: 'Here are your matches',
               status: 200,
             })

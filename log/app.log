@@ -1,53 +1,6 @@
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [32m200 [0m60.387 ms - 115[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m18.960 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m9.677 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m9.836 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m8.182 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m7.605 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m9.098 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m9.239 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m7.616 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m12.871 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m8.095 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m19.244 ms - -[0m
-{ 'match suggestions': [ 'teacher1@test.com', 'teacher2@test.com' ],
-  message: 'User found',
-  status: 200 }
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [36m304 [0m7.994 ms - -[0m
-[0mGET /profile/get?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE&profile=teacher1@test.com [32m200 [0m26.712 ms - 160[0m
+{ perc: 0.93, email: 'teacher2@test.com' }
+{ perc: 0.8, email: 'teacher1@test.com' }
+{ perc: 0.9, email: 'teacher6@test.com' }
+{ method: 'GET',
+  uri: 'http://localhost:8001/getmultiple?profiles=[object Object],[object Object],[object Object],' }
+[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [33m400 [0m74.480 ms - 115[0m
