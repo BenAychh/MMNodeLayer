@@ -514,7 +514,7 @@ router.get('/get', (req, res, next) => {
               delete results[0].profile.lastName;
               delete results[0].profile.followedAndStaff;
               if (results[2].profile && results[3].profile) {
-                results[0].profile.matchPercent = JSON.parse(results[1].profile).matchSuggestions.filter(match => {
+                results[0].profile.matchPercent = JSON.parse(results[3].profile).matchSuggestions.filter(match => {
                   return match.email === decoded.email;
                 })[0].perc || 0;
                 results[0].myMatchProfile = JSON.parse(results[2].profile);
