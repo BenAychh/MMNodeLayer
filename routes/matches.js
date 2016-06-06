@@ -76,7 +76,7 @@ router.get('/suggested', (req, res, next) => {
     })
     return;
   }
-})
+});
 
 router.put('/interest', (req, res, next) => {
   if (req.body.token) {

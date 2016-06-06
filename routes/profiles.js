@@ -482,7 +482,7 @@ router.get('/get', (req, res, next) => {
           promises.push(rp(getProfile));
           let checkMatch = {
             method: 'GET',
-            uri: matchService + "ismatch?email=" + decoded.email + "&match=" + req.query.profile,
+            uri: matchService + "relationship?email=" + decoded.email + "&match=" + req.query.profile,
             json: true // Automatically stringifies the body to JSON
           };
           promises.push(rp(checkMatch));
@@ -513,6 +513,7 @@ router.get('/get', (req, res, next) => {
               delete results[0].profile.password;
               delete results[0].profile.lastName;
               delete results[0].profile.followedAndStaff;
+              results[0].interest = results[1].interested;
               if (results[2].profile && results[3].profile) {
                 results[0].profile.matchPercent = JSON.parse(results[1].profile).matchSuggestions.filter(match => {
                   return match.email === decoded.email;
