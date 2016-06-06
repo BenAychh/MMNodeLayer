@@ -5,6 +5,8 @@ Montessori Match is an app that crosses the concepts of the job-search site and 
 
 Schools and teachers fill out personal profiles. A proprietary algorithm compares these profiles and makes recommendations for who would be a good fit. These recommendations are shown to users, who have the option of showing interest in their recommendations. If a school and teacher both show interest in each other, they are matched, and are given contact information for each other. Schools can then start a hiring process.
 
+[Click here for a demo of the iOS app!](https://appetize.io/app/muf44gr1zw5e73u7znufdj3hw0?device=iphone6&scale=75&orientation=portrait&osVersion=9.3)
+
 The application is comprised of three layers. [The client-facing layer is a set of iOS and Android apps made using NativeScript.](http://github.com/dsudia/montMatchMobile). The apps interface with the layer in this repository, written in Node, which interfaces with four microservices:
 * [An authorization service that handles sign up and login, written in Java, using a PostgreSQL database.](https://github.com/BenAychh/MMAuthService)
 * [A profile service that holds the rest of a user's profile information, written in Java, using a PostgreSQL database](https://github.com/dsudia/mmprofileservice)
