@@ -1,3 +1,4 @@
-[0mGET /profile/get?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE&profile=teacher1@test.com [32m200 [0m74.915 ms - 1164[0m
-[0mGET /profile/get?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE&profile=teacher1@test.com [32m200 [0m37.293 ms - 1164[0m
-[0mGET /matches/suggested?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE [32m200 [0m20.851 ms - 708[0m
+{ intersted: false, match: false }
+[0mGET /profile/get?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE&profile=teacher1@test.com [32m200 [0m107.309 ms - 1164[0m
+{ match: false, interested: false }
+[0mGET /profile/get?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNjaG9vbDFAdGVzdC5jb20iLCJpc1RlYWNoZXIiOiJmYWxzZSIsImlhdCI6MTQ2NDg4NTgzMH0.fUlLxDiFYtLHPp_FRDqFrf9SbaKgnf5sEOIWuuUunEE&profile=teacher1@test.com [32m200 [0m442.309 ms - 1181[0m

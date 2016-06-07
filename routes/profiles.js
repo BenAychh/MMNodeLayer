@@ -513,7 +513,8 @@ router.get('/get', (req, res, next) => {
               }
               delete results[0].profile.password;
               delete results[0].profile.followedAndStaff;
-              results[0].interest = results[1].interested;
+		console.log(results[1]);
+              results[0].profile.interest = results[1].interested;
               if (results[2].profile && results[3].profile) {
                 results[0].profile.matchPercent = JSON.parse(results[3].profile).matchSuggestions.filter(match => {
                   return match.email === decoded.email;
