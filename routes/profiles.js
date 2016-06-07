@@ -509,9 +509,9 @@ router.get('/get', (req, res, next) => {
               if (!results[1].match) {
                 delete results[0].profile.email;
                 delete results[0].profile.displayName;
+                delete results[0].profile.lastName;
               }
               delete results[0].profile.password;
-              delete results[0].profile.lastName;
               delete results[0].profile.followedAndStaff;
               results[0].interest = results[1].interested;
               if (results[2].profile && results[3].profile) {
