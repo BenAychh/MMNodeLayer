@@ -6,11 +6,11 @@ var emailValidator = require('email-validator');
 var validUrl = require('valid-url');
 var jwt = require('jsonwebtoken');
 
-var authService = 'http://localhost:8000/'
-var profileService = 'http://localhost:8001/'
-var matchService = 'http://localhost:8002/'
+var authService = process.env.AUTH_SERVICE_IP || 'localhost:8000'
+var profileService = process.env.PROFILE_SERVICE_IP || 'localhost:8001'
+var matchService = process.env.MATCH_SERVICE_IP || 'localhost:8002'
 
-var secretKey = process.env.secretKey;
+var secretKey = process.env.SECRET_KEY;
 if (!secretKey) {
   secretKey = 'shhhhh';
 }

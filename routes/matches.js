@@ -7,7 +7,7 @@ var matchService = 'http://localhost:8002/';
 var profileService = 'http://localhost:8001/';
 var emailValidator = require('email-validator');
 
-var secretKey = process.env.secretKey;
+var secretKey = process.env.SECRET_KEY;
 if (!secretKey) {
   secretKey = 'shhhhh';
 }

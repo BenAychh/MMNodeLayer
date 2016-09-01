@@ -15,7 +15,7 @@ var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY || 'AKIAJCKL57PAMZB54LAQ';
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY || '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';
 var S3_BUCKET = process.env.S3_BUCKET || 'mmprofilesimages';
 
-var secretKey = process.env.secretKey;
+var secretKey = process.env.SECRET_KEY;
 if (!secretKey) {
   secretKey = 'shhhhh';
 }

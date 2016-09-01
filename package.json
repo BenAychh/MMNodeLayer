@@ -6,6 +6,9 @@
     "start": "node ./bin/www",
     "test": "mocha"
   },
+  "engines": {
+    "node": "6.5.0"
+  },
   "dependencies": {
     "aws-sdk": "^2.3.16",
     "body-parser": "~1.13.2",
