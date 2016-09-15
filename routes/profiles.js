@@ -162,7 +162,6 @@ router.put('/update', (req, res, next) => {
   }
 });
 router.post('/makematchprofile', (req, res, next) => {
-  console.log(req.body);
   if (req.body.token) {
     jwt.verify(req.body.token, secretKey, function(err, decoded) {
       if (!err) {
@@ -436,7 +435,6 @@ router.get('/getmyprofile', (req, res, next) => {
         };
         rp(updateOptions)
           .then(parsedBody => {
-            console.log(parsedBody);
             res.status(200);
             res.json({
               message: 'Returning profile',
@@ -513,7 +511,6 @@ router.get('/get', (req, res, next) => {
               }
               delete results[0].profile.password;
               delete results[0].profile.followedAndStaff;
-		console.log(results[1]);
               results[0].profile.interest = results[1].interested;
               if (results[2].profile && results[3].profile) {
                 results[0].profile.matchPercent = JSON.parse(results[3].profile).matchSuggestions.filter(match => {
@@ -565,7 +562,6 @@ router.get('/get', (req, res, next) => {
   }
 })
 router.get('/signS3', (req, res) => {
-  console.log(AWS_ACCESS_KEY, AWS_SECRET_KEY, S3_BUCKET);
   aws.config.update({
     accessKeyId: AWS_ACCESS_KEY,
     secretAccessKey: AWS_SECRET_KEY

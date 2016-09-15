@@ -59,7 +59,6 @@ router.get('/suggested', (req, res, next) => {
           return;
         })
       } else {
-        console.log(decoded);
         res.status(401);
         res.json({
           message: 'Invalid token, please log out then log back in',
@@ -226,7 +225,6 @@ router.get('/getinterest', (req, res, next) => {
           })
         })
         .catch(errorBody => {
-          console.log(errorBody);
           res.status(errorBody.statusCode);
           res.json({
             message: errorBody.message,
@@ -282,7 +280,6 @@ router.get('/getmatches', (req, res, next) => {
 
         })
         .catch(errorBody => {
-          console.log(errorBody);
           res.status(errorBody.statusCode);
           res.json({
             message: errorBody.message,

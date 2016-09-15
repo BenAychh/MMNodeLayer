@@ -169,10 +169,8 @@ router.post('/signup', (req, res, next) => {
     },
     json: true // Automatically stringifies the body to JSON
   };
-  console.log(authOptions);
   rp(authOptions)
   .then(parsedBody => {
-    console.log("working!");
     let profileOptions = {
       method: 'POST',
       uri: profileService + "create",
@@ -200,7 +198,6 @@ router.post('/signup', (req, res, next) => {
     })
   })
   .catch(errorBody => {
-    console.log(errorBody);
     res.status(errorBody.statusCode);
     res.json({
       status: errorBody.statusCode,
@@ -258,7 +255,6 @@ router.post('/login', (req, res, next) => {
     },
     json: true,
   };
-  console.log(authOptions);
   rp(authOptions)
   .then(parsedBody => {
     res.status(200);
@@ -268,7 +264,6 @@ router.post('/login', (req, res, next) => {
     })
   })
   .catch(errorBody => {
-    console.log(errorBody);
     res.status(errorBody.statusCode);
     res.json({
       status: errorBody.statusCode,
