@@ -7,9 +7,9 @@ var validUrl = require('valid-url');
 var jwt = require('jsonwebtoken');
 var algorithm = require('../algorithm/algorithm.js');
 var aws = require('aws-sdk');
-var authService = 'http://localhost:8000/';
-var profileService = 'http://localhost:8001/';
-var matchService = 'http://localhost:8002/';
+var authService = process.env.AUTH_SERVICE_IP || 'http://localhost:8000/';
+var profileService = process.env.PROFILE_SERVICE_IP || 'http://localhost:8001/';
+var matchService = process.env.MATCH_SERVICE_IP || 'http://localhost:8002/';
 
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY || 'AKIAJCKL57PAMZB54LAQ';
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY || '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';

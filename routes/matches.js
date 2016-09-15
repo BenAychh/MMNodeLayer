@@ -3,8 +3,8 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 var rp = require('request-promise');
-var matchService = 'http://localhost:8002/';
-var profileService = 'http://localhost:8001/';
+var matchService = process.env.MATCH_SERVICE_IP || 'http://localhost:8002/';
+var profileService = process.env.PROFILE_SERVICE_IP || 'http://localhost:8001/';
 var emailValidator = require('email-validator');
 
 var secretKey = process.env.SECRET_KEY;
